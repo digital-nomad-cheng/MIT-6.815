@@ -123,7 +123,7 @@ void Image::write(const std::string &filename) const {
 
 void Image::debug_write() const {
     std::ostringstream ss;
-    ss << "./Output/" <<  debugWriteNumber << ".png";
+    ss << "../Output/" <<  debugWriteNumber << ".png";
     std::string filename = ss.str();
     write(filename);
     debugWriteNumber++;
