@@ -123,7 +123,7 @@ void Image::write(const std::string &filename) const {
 
 void Image::debug_write() const {
     std::ostringstream ss;
-    ss << "./Output/" <<  debugWriteNumber << ".png";
+    ss << "../Output/" <<  debugWriteNumber << ".png";
     std::string filename = ss.str();
     write(filename);
     debugWriteNumber++;
@@ -153,7 +153,7 @@ long long Image::number_of_elements() const
 const float & Image::operator()(int x) const
 {
     // Linear accessor to the image data
-    if (x >= 0 && x <= this->width()) {
+    if (x >= 0 && x < this->width()) {
         return image_data[x];
     } else {
         throw OutOfBoundsException();
@@ -164,7 +164,7 @@ const float & Image::operator()(int x) const
 const float & Image::operator()(int x, int y) const
 {
     // Accessor to the image data at channel 0
-    if (x >= 0 && x <= this->width() && y >= 0 && y <= this->height()) {
+    if (x >= 0 && x < this->width() && y >= 0 && y < this->height()) {
         return image_data[this->width() * y + x];
     } else {
         throw OutOfBoundsException();
@@ -174,7 +174,7 @@ const float & Image::operator()(int x, int y) const
 const float & Image::operator()(int x, int y, int z) const
 {
     // Accessor to the image data at channel z
-    if (x >= 0 && x <= this->width() && y >= 0 && y <= this->height() && z >= 0 && z <= this->channels()) {
+    if (x >= 0 && x < this->width() && y >= 0 && y < this->height() && z >= 0 && z < this->channels()) {
         return image_data[this->width()*this->height()*z + this->width() * y + x];
     } else {
         throw OutOfBoundsException();
@@ -193,7 +193,7 @@ float & Image::operator()(int x) {
 
 float & Image::operator()(int x, int y) {
     // Setter to the image data at channel 0
-    if (x >= 0 && x <= this->width() && y >= 0 && y <= this->height()) {
+    if (x >= 0 && x < this->width() && y >= 0 && y < this->height()) {
         return image_data[this->width() * y + x];
     } else {
         throw OutOfBoundsException();
@@ -203,7 +203,7 @@ float & Image::operator()(int x, int y) {
 float & Image::operator()(int x, int y, int z)
 {
     // Setter to the image data at channel z
-    if (x >= 0 && x <= this->width() && y >= 0 && y <= this->height() && z >= 0 && z <= this->channels()) {
+    if (x >= 0 && x < this->width() && y >= 0 && y < this->height() && z >= 0 && z < this->channels()) {
         return image_data[this->width()*this->height()*z + this->width() * y + x];
     } else {
         throw OutOfBoundsException();
