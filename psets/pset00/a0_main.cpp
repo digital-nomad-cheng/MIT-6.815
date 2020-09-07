@@ -10,9 +10,9 @@ int main() {
     helloworld(5,10);
     // Example Test
     // Read an Image
-    Image test_image = readAnImage("./Input/Boston_low_contrast.png");
+    Image test_image = readAnImage("./Input/boston_low_contrast.png");
 
     // // Write an Image
     // cout << "Image size: " << im.width() << ", " << im.height() << ", " << im.channels() << endl;
-    test_image.write("./Output/SameAsInput.png");
+    test_image.write("./Output/boston_low_contrast.png");
 }
