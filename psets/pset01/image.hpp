@@ -80,7 +80,28 @@ private:
 	static float uint8_to_float(const unsigned char &in); // [0-255] -> [0-1]
 	static unsigned char float_to_uint8(const float &in); // [0-1] -> [0-255]
 
-
 };
+
+// --------- HANDOUT  PS01 ------------------------------
+void compareDimensions(const Image & im1, const Image & im2);
+
+// Image/Image element-wise operations
+Image operator+ (const Image & im1, const Image & im2);
+Image operator- (const Image & im1, const Image & im2);
+Image operator* (const Image & im1, const Image & im2);
+Image operator/ (const Image & im1, const Image & im2);
+
+// Image/scalar operations 
+Image operator+ (const Image & im1, const float & c);
+Image operator- (const Image & im1, const float & c);
+Image operator* (const Image & im1, const float & c);
+Image operator/ (const Image & im1, const float & c);
+
+// scalar/Image operations 
+Image operator+ (const float & c, const Image & im1);
+Image operator- (const float & c, const Image & im1);
+Image operator* (const float & c, const Image & im1);
+Image operator/ (const float & c, const Image & im1);
+// ------------------------------------------------------
 
 #endif

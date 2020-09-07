@@ -209,4 +209,177 @@ float & Image::operator()(int x, int y, int z)
         throw OutOfBoundsException();
     }
 }
+
+void compareDimensions(const Image & im1, const Image & im2) 
+{
+    if (im1.width() != im2.width() || im1.height() != im2.height() || im1.channels() != im2.channels()) {
+        throw MismatchedDimensionsException();
+    }
+    return;
+}
+
+// Image/Image element-wise operations
+Image operator+ (const Image & im1, const Image & im2)
+{
+    compareDimensions(im1, im2);
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = im1(w, h, c) + im2(w, h, c);
+            } 
+        }
+    }
+    return output;
+}
+Image operator- (const Image & im1, const Image & im2)
+{
+    compareDimensions(im1, im2);
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = im1(w, h, c) - im2(w, h, c);
+            } 
+        }
+    }
+    return output;
+}
+Image operator* (const Image & im1, const Image & im2)
+{
+    compareDimensions(im1, im2);
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = im1(w, h, c) * im2(w, h, c);
+            } 
+        }
+    }
+    return output;
+}
+Image operator/ (const Image & im1, const Image & im2)
+{
+    compareDimensions(im1, im2);
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                if (im2(w, h, c) == 0.0) {
+                    throw DivideByZeroException();
+                }
+                output(w, h, c) = im1(w, h, c) / im2(w, h, c);
+            } 
+        }
+    }
+    return output;
+}
+
+// Image/scalar operations 
+Image operator+ (const Image & im1, const float & c)
+{
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = im1(w, h, c) + c;
+            } 
+        }
+    }
+    return output;
+
+}
+Image operator- (const Image & im1, const float & c)
+{
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = im1(w, h, c) - c;
+            } 
+        }
+    }
+    return output;
+}
+Image operator* (const Image & im1, const float & c)
+{
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = im1(w, h, c) * c;
+            } 
+        }
+    }
+    return output;
+}
+Image operator/ (const Image & im1, const float & c)
+{
+    if (c == 0.0) {
+        throw DivideByZeroException();
+    }
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = im1(w, h, c) / c;
+            } 
+        }
+    }
+    return output;
+}
+
+// scalar/Image operations 
+Image operator+ (const float & c, const Image & im1)
+{
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = c + im1(w, h, c);
+            } 
+        }
+    }
+    return output;
+}
+Image operator- (const float & c, const Image & im1)
+{
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = c - im1(w, h, c);
+            } 
+        }
+    }
+    return output;
+
+}
+Image operator* (const float & c, const Image & im1)
+{
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                output(w, h, c) = c * im1(w, h, c);
+            } 
+        }
+    }
+    return output;
+}
+Image operator/ (const float & c, const Image & im1)
+{
+    Image output(im1.width(), im1.height(), im1.channels());
+    for (int c = 0; c < im1.channels(); c++) {
+        for (int h = 0; h < im1.height(); h++) {
+            for (int w = 0; w < im1.width(); w++) {
+                if (im1(w, h, c) == 0.0) {
+                    throw DivideByZeroException();
+                }
+                output(w, h, c) = c / im1(w, h, c);
+            } 
+        }
+    }
+    return output;
+}
 // ---------------------- End of pset01 -----------------------------------
