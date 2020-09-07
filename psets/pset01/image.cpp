@@ -145,12 +145,12 @@ unsigned char Image::float_to_uint8(const float &in) {
 }
 
 // --------------------- Begin of pset01 ----------------------------------
-long long number_of_elements() const
+long long Image::number_of_elements() const
 {
     return dim_values[0] * dim_values[1] * dim_values[2];
 }
 
-const float & operator()(int x) const
+const float & Image::operator()(int x) const
 {
     // Linear accessor to the image data
     if (x >= 0 && x <= this->width()) {
@@ -161,20 +161,20 @@ const float & operator()(int x) const
     
 }
 
-const float & operator()(int x, int y) const
+const float & Image::operator()(int x, int y) const
 {
     // Accessor to the image data at channel 0
-    if (x >= 0 && x <= this->width() && y >= 0 y <= this->height()) {
+    if (x >= 0 && x <= this->width() && y >= 0 && y <= this->height()) {
         return image_data[this->width() * y + x];
     } else {
         throw OutOfBoundsException();
     }
 }
 
-const float & operator()(int x, int y, int z) const
+const float & Image::operator()(int x, int y, int z) const
 {
     // Accessor to the image data at channel z
-    if (x >= 0 && x <= this->width() && y >= 0 y <= this->height() && z >= 0 && z <= this->channels()) {
+    if (x >= 0 && x <= this->width() && y >= 0 && y <= this->height() && z >= 0 && z <= this->channels()) {
         return image_data[this->width()*this->height()*z + this->width() * y + x];
     } else {
         throw OutOfBoundsException();
@@ -182,7 +182,7 @@ const float & operator()(int x, int y, int z) const
      
 }
 
-float & operator()(int x) {
+float & Image::operator()(int x) {
     // Linear setter to the image data
     if (x >= 0 && x <= this->width()) {
         return image_data[x];
@@ -191,19 +191,19 @@ float & operator()(int x) {
     }
 }
 
-float & operator()(int x, int y) {
+float & Image::operator()(int x, int y) {
     // Setter to the image data at channel 0
-    if (x >= 0 && x <= this->width() && y >= 0 y <= this->height()) {
+    if (x >= 0 && x <= this->width() && y >= 0 && y <= this->height()) {
         return image_data[this->width() * y + x];
     } else {
         throw OutOfBoundsException();
     }
 
 }
-float & operator()(int x, int y, int z)
+float & Image::operator()(int x, int y, int z)
 {
     // Setter to the image data at channel z
-    if (x >= 0 && x <= this->width() && y >= 0 y <= this->height() && z >= 0 && z <= this->channels()) {
+    if (x >= 0 && x <= this->width() && y >= 0 && y <= this->height() && z >= 0 && z <= this->channels()) {
         return image_data[this->width()*this->height()*z + this->width() * y + x];
     } else {
         throw OutOfBoundsException();
