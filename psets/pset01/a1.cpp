@@ -134,3 +134,47 @@ Image saturate(const Image &im, float k)
     }
     return yuv2rgb(yuv);
 }
+
+Image add_black_dot(const Image &im)
+{
+    Image output(im.width(), im.height(), im.channels());
+
+    for (int h = 0; h < im.height(); h++) {
+        for (int w = 0; w < im.width(); w++) {
+            output(w, h, 0) = im(w, h, 0);
+            output(w, h, 1) = im(w, h, 1);
+            output(w, h, 2) = im(w, h, 2);
+        }
+    }
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            output(floor(im.width()/2)+i, floor(im.height()/2)+j, 0) = 0;
+            output(floor(im.width()/2)+i, floor(im.height()/2)+j, 1) = 0;
+            output(floor(im.width()/2)+i, floor(im.height()/2)+j, 2) = 0;
+        }
+    }
+    output(floor(im.width()/2), floor(im.height()/2), 0) = 0;
+    output(floor(im.width()/2), floor(im.height()/2), 1) = 0;
+    output(floor(im.width()/2), floor(im.height()/2), 2) = 0;
+    return output;
+}
+
+std::vector<Image> spanish(const Image &im)
+{
+    Image yuv = rgb2yuv(im);
+    Image output(im.width(), im.height(), im.channels());
+    for (int h = 0; h < yuv.height(); h++) {
+        for (int w = 0; w < yuv.width(); w++) {
+            output(w, h, 0) = 0.5;
+            output(w, h, 1) = -yuv(w, h, 1);
+            output(w, h, 2) = -yuv(w, h, 2);
+        }
+    }
+    Image color = yuv2rgb(output);
+    Image grayscale = color2gray(im);
+
+    std::vector<Image> results;
+    results.push_back(color);
+    results.push_back(grayscale);
+    return results;
+}
