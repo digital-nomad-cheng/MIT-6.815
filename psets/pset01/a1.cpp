@@ -88,10 +88,49 @@ Image brightnessContrastLumi(const Image &im, float brightF, float contrastF, fl
     Image result = Image(im.width(), im.height(), im.channels());
     for (int h = 0; h < im.height(); h++) {
         for (int w = 0; w < im.width(); w++) {
-            result(w, h, 0) = chrom(w, h, 0) / lumi(w, h);
-            result(w, h, 1) = chrom(w, h, 0) / lumi(w, h);
-            result(w, h, 2) = chrom(w, h, 0) / lumi(w, h);
+            result(w, h, 0) = chrom(w, h, 0) * lumi(w, h);
+            result(w, h, 1) = chrom(w, h, 1) * lumi(w, h);
+            result(w, h, 2) = chrom(w, h, 2) * lumi(w, h);
         }
     }
     return result;
+}
+
+Image rgb2yuv(const Image &im)
+{
+    Image output(im.width(), im.height(), im.channels());
+    for (int h = 0; h < im.height(); h++) {
+        for (int w = 0; w < im.width(); w++) {
+            output(w, h, 0) = 0.299 * im(w, h, 0) + 0.587 * im(w, h, 1) + 0.114 * im(w, h, 2);
+            output(w, h, 1) = -0.147 * im(w, h, 0) + (-0.289) * im(w, h, 1) + 0.436 * im(w, h, 2);
+            output(w, h, 2) = 0.615 * im(w, h, 0) + (-0.515) * im(w, h, 1) + (-0.100) * im(w, h, 2);
+        }
+    }
+    return output;
+
+}
+
+Image yuv2rgb(const Image &im)
+{
+    Image output(im.width(), im.height(), im.channels());
+    for (int h = 0; h < im.height(); h++) {
+        for (int w = 0; w < im.width(); w++) {
+            output(w, h, 0) = 1 * im(w, h, 0) + 1.14 * im(w, h, 2);
+            output(w, h, 1) = 1 * im(w, h, 0) + (-0.395) * im(w, h, 1) + (-0.581) * im(w, h, 2);
+            output(w, h, 2) = 1 * im(w, h, 0) + 2.032 * im(w, h, 1);
+        }
+    }
+    return output;
+}
+
+Image saturate(const Image &im, float k)
+{
+    Image yuv = rgb2yuv(im);
+    for (int h = 0; h < im.height(); h++) {
+        for (int w = 0; w < im.width(); w++) {
+            yuv(w, h, 1) *= k;
+            yuv(w, h, 2) *= k;
+        }
+    }
+    return yuv2rgb(yuv);
 }
