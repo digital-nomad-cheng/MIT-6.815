@@ -178,3 +178,37 @@ std::vector<Image> spanish(const Image &im)
     results.push_back(grayscale);
     return results;
 }
+
+Image grayworld(const Image & in)
+{
+    std::vector<float> means = get_mean_per_channel(in);
+    float r = means[0];
+    float g = means[1];
+    float b = means[2];
+    float red_alpha = g / r;
+    float blue_alpha = b / r;
+    Image output(in.width(), in.height(), in.channels());
+    for (int h = 0; h < in.height(); h++) {
+        for (int w = 0; w < in.width(); w++) {
+            output(w, h, 0) = in(w, h, 0) * red_alpha;
+            output(w, h, 1) = in(w, h, 1);
+            output(w, h, 2) = in(w, h, 2) * blue_alpha;
+        }
+    }
+    return output;
+}
+
+std::vector<float> get_mean_per_channel(const Image & im)
+{
+    std::vector<float> means;
+    means.resize(3);
+    int image_size = im.width() * im.height();
+    for (int c = 0; c < im.channels(); c++) {
+        for (int h = 0; h < im.height(); h++) {
+            for (int w = 0; w < im.width(); w++) {
+                means[c] = means[c] + im(w, h, c) / image_size;
+            }
+        }
+    }
+    return means;
+}
