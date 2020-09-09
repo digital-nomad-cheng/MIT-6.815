@@ -120,6 +120,40 @@ Image gradientMagnitude(const Image &im, bool clamp)
 	return output;
 }
 
+vector<float> gauss1DFilterValues(float sigma, float truncate)
+{
+	const float pi = 3.1415926;
+	int r = ceil(sigma * truncate);
+	std::vector<float> result;
+
+	float weight = 1 / sqrt(2*pi*sigma*sigma);
+	result.resize(2*r+1);
+	for (int i = -r; i <=r; i++) {
+		result[i+r] = weight * exp(-(r*r) / (2*sigma*sigma));
+	}
+	int total = 0;
+	for (int i = 0; i < result.size(); i++) {
+		total += result[i];
+	}
+	for (int i = 0; i < result.size(); i++) {
+		result[i] /= total;
+	}
+	
+	return result;
+}
+
+// vector<float> gauss2DFilterValues(float sigma, float truncate);
+
+Image gaussianBlur_horizontal(const Image &im, float sigma, float truncate, bool clamp)
+{
+	std::vector<float> kernel = gauss1DFilterValues(sigma, truncate);
+	Filter filter(kernel, 2*truncate*sigma+1, 1);
+	return filter.convolve(im);
+}
+
+// Image gaussianBlur_separable(const Image &im, float sigma, float truncate=3.0, bool clamp=true);
+// Image gaussianBlur_2D(const Image &im, float sigma, float truncate=3.0, bool clamp=true);
+
 /**************************************************************
  //               DON'T EDIT BELOW THIS LINE                //
  *************************************************************/

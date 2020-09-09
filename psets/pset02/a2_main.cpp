@@ -17,4 +17,6 @@ int main() {
     Image output3 = gradientMagnitude(input, true);
     output3.write("../Output/boston_magnitude.png");
 
+    Image output4 = gaussianBlur_horizontal(input, 3.0);
+    output4.write("../Output/boston_horizontal_gaussian_blur.png");
 }
