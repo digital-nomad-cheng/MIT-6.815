@@ -41,9 +41,9 @@ Image Filter::convolve(const Image &im, bool clamp)
 		for (int w = 0; w < im.width(); w++) {
 			for (int y = -yy; y <= yy; y++) {
 				for (int x = -xx; x <= xx; x++) {
-					output(w, h, 0) += this->kernel[this->width*y + x] * im.smartAccessor(w+x, h+y, 0, clamp);
-					output(w, h, 1) += this->kernel[this->width*y + x] * im.smartAccessor(w+x, h+y, 1, clamp);
-					output(w, h, 2) += this->kernel[this->width*y + x] * im.smartAccessor(w+x, h+y, 2, clamp);
+					for (int c = 0; c < im.channels(); c++) {
+						output(w, h, c) += this->kernel[this->width*(y+yy) + x+xx] * im.smartAccessor(w+x, h+y, c, clamp);
+					}
 				}
 			}
 		}
@@ -70,7 +70,6 @@ Image boxBlur(const Image &im, int k, bool clamp)
 	Image output = Image(im.width(), im.height(), im.channels());
 	int r = k / 2;
 	float weight = 1.0 / float(k * k);
-
 	for (int h = 0; h < im.height(); h++) {
 		for (int w = 0; w < im.width(); w++) {
 			for (int y = -r; y <=r; y++) {
@@ -93,6 +92,32 @@ Image boxBlur_filterClass(const Image &im, int k, bool clamp)
 	}
 	Filter box_filter = Filter(kernel, k, k);
 	return box_filter.convolve(im, clamp);
+}
+
+// Gradient Filter
+Image gradientMagnitude(const Image &im, bool clamp)
+{
+	// Image gray = color2gray(im);
+	std::vector<float> h_sobel = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+	std::vector<float> v_sobel = {-1.0, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0};
+	Filter v_filter = Filter(v_sobel, 3, 3);
+	Filter h_filter = Filter(h_sobel, 3, 3);
+	
+	Image v_image = v_filter.convolve(im, clamp);
+	Image h_image = h_filter.convolve(im, clamp);
+	
+
+	Image output(im.width(), im.height(), im.channels());
+
+	for (int h = 0; h < im.height(); h++) {
+		for (int w = 0; w < im.width(); w++) {
+			for (int c = 0; c < im.channels(); c++) {
+				output(w, h, c) = sqrt(h_image(w, h, c)*h_image(w, h, c) + v_image(w, h, c)*v_image(w, h, c));
+			}
+			
+		}
+	}
+	return output;
 }
 
 /**************************************************************
