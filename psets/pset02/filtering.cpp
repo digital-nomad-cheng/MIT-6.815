@@ -69,15 +69,15 @@ Image boxBlur(const Image &im, int k, bool clamp)
 {
 	Image output = Image(im.width(), im.height(), im.channels());
 	int r = k / 2;
-	float weight = k * k;
+	float weight = 1.0 / float(k * k);
 
 	for (int h = 0; h < im.height(); h++) {
 		for (int w = 0; w < im.width(); w++) {
 			for (int y = -r; y <=r; y++) {
 				for (int x = -r; x <= r; x++) {
-					output(w, h, 0) += im.smartAccessor(w+x, h+y, 0, clamp) / weight;
-					output(w, h, 1) += im.smartAccessor(w+x, h+y, 1, clamp) / weight;
-					output(w, h, 2) += im.smartAccessor(w+x, h+y, 2, clamp) / weight;
+					output(w, h, 0) += im.smartAccessor(w+x, h+y, 0, clamp) * weight;
+					output(w, h, 1) += im.smartAccessor(w+x, h+y, 1, clamp) * weight;
+					output(w, h, 2) += im.smartAccessor(w+x, h+y, 2, clamp) * weight;
 				}
 			}
 		}
