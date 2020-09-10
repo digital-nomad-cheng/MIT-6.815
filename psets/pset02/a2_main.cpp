@@ -6,11 +6,11 @@ using namespace std;
 // This is a way for you to test your functions. 
 // We will only grade the contents of a0.cpp and Image.cpp
 int main() {
-	Image input = Image("../Input/lounge_view.png");
+	Image input = Image("../Input/lens.png");
 	Image output1 = boxBlur(input, 3, true);
     output1.write("../Output/boston_box_blur.png");
 
-    // a little dark here
+    // a little dark here -> Fixed
     Image output2 = boxBlur_filterClass(input, 3, true);
     output2.write("../Output/boston_filter_class_box_blur.png");
 
@@ -28,4 +28,11 @@ int main() {
 
     Image output7 = unsharpMask(input, 3.0, 3.0, 0.5);
     output7.write("../Output/boston_unsharp_mask.png");
+
+    Image output8 = bilateral(input);
+    output8.write("../Output/boston_bilateral.png");
+
+    Image output9 = bilaYUV(input);
+    output9.write("../Output/boston_bilaYUV.png");
+
 }

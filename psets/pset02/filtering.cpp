@@ -201,9 +201,82 @@ Image unsharpMask(const Image &im, float sigma, float truncate, float strength, 
 // Bilaterial Filtering
 Image bilateral(const Image &im, float sigmaRange, float sigmaDomain, float truncateDomain, bool clamp)
 {
+
 	
+	int r = ceil(sigmaDomain * truncateDomain);
+	float kernel_dimenions = 2*ceil(sigmaDomain * truncateDomain) + 1;   
+	std::vector<float> domain_kernel = gauss2DFilterValues(sigmaDomain, truncateDomain);
+	Filter domain_filter(domain_kernel, kernel_dimenions, kernel_dimenions);
+
+
+	float gaussian_range_constant = 1.0/sqrt(2*M_PI*pow(sigmaRange, 2));
+	// Read http://people.csail.mit.edu/sparis/publi/2009/fntcgv/Paris_09_Bilateral_filtering.pdf for clarification	
+	
+	Image output(im.width(), im.height(), im.channels());
+	Image bilaterl_image(im.width(), im.height(), im.channels());
+
+	for (int h = 0; h < im.height(); h++) {
+		for (int w = 0; w < im.width(); w++) {
+			for (int c = 0; c < im.channels(); c++) {
+				float filter_value = 0; 
+                float k_for_i_j = 0;
+                float pixel_val = im.smartAccessor(w, h, c);
+
+				for (int y = -r; y <= r; y++) {
+					for (int x = -r; x <= r; x++) {
+						float domain_weight = domain_filter(x+r, y+r);
+
+						float pixel_prime = im.smartAccessor(w + x, h + y, c, clamp);
+
+						float range_weight = gaussian_range_constant*exp(-1*pow((pixel_val - pixel_prime),2)/(2*pow(sigmaRange,2)));
+
+						float intensity_at_examined_point = pixel_prime;
+
+						float final_value = domain_weight*range_weight*intensity_at_examined_point;
+                        filter_value += final_value;
+
+                        k_for_i_j += domain_weight*range_weight;
+
+					}
+				}
+				output(w,h,c) = filter_value/k_for_i_j;
+
+			}
+		}
+	}
+
+	return output;
 }
-// Image bilaYUV(const Image &im, float sigmaRange=0.1, float sigmaY=1.0, float sigmaUV=4.0, float truncateDomain=3.0, bool clamp=true);
+
+Image bilaYUV(const Image &im, float sigmaRange, float sigmaY, float sigmaUV, float truncateDomain, bool clamp)
+{
+	Image yuv = rgb2yuv(im);
+	Image Y(im.width(), im.height(), 1);
+	Image UV(im.width(), im.height(), 2);
+	for (int h = 0; h < im.height(); h++) {
+		for (int w = 0; w < im.width(); w++) {
+			Y(w, h, 0) = yuv(w, h, 0);
+			UV(w, h, 0) = yuv(w, h, 1);
+			UV(w, h, 1) = yuv(w, h, 2);
+		}
+	}
+
+	Image Y_bilateral = bilateral(Y, sigmaRange, sigmaY, truncateDomain, clamp);
+	Image UV_bilateral = bilateral(UV, sigmaRange, sigmaUV, truncateDomain, clamp);
+
+	Image output(im.width(), im.height(), im.channels());
+
+	for (int h = 0; h < im.height(); h++) {
+		for (int w = 0; w < im.width(); w++) {
+			output(w, h, 0) = Y_bilateral(w, h, 0);
+			output(w, h, 1) = UV_bilateral(w, h, 0);
+			output(w, h, 2) = UV_bilateral(w, h, 1);
+		}
+	}
+
+	output = yuv2rgb(output);
+	return output;
+}
 
 /**************************************************************
  //               DON'T EDIT BELOW THIS LINE                //
