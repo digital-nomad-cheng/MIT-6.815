@@ -122,37 +122,88 @@ Image gradientMagnitude(const Image &im, bool clamp)
 
 vector<float> gauss1DFilterValues(float sigma, float truncate)
 {
-	const float pi = 3.1415926;
 	int r = ceil(sigma * truncate);
 	std::vector<float> result;
 
-	float weight = 1 / sqrt(2*pi*sigma*sigma);
-	result.resize(2*r+1);
+	float total_sum = 0;
 	for (int i = -r; i <=r; i++) {
-		result[i+r] = weight * exp(-(r*r) / (2*sigma*sigma));
+		result.push_back(exp(-(i*i) / (2*sigma*sigma)));
+		total_sum += exp(-(i*i) / (2*sigma*sigma));
 	}
-	int total = 0;
-	for (int i = 0; i < result.size(); i++) {
-		total += result[i];
-	}
-	for (int i = 0; i < result.size(); i++) {
-		result[i] /= total;
+
+	for (auto & val : result) {
+		val /= total_sum;
 	}
 	
 	return result;
 }
 
-// vector<float> gauss2DFilterValues(float sigma, float truncate);
+vector<float> gauss2DFilterValues(float sigma, float truncate)
+{
+	std::vector<float> result;
+	int r = ceil(sigma * truncate);
+	float total_sum = 0;
+	for (int y = -r; y <= r; y++) {
+		for (int x = -r; x <= r; x++) {
+			result.push_back(exp(-(x*x+y*y) / (2*sigma*sigma)));
+			total_sum += exp(-(x*x+y*y) / (2*sigma*sigma));
+		}
+	}
+	
+	for (auto & val : result) {
+		val /= total_sum;
+	}
+	
+	return result;
+}
 
 Image gaussianBlur_horizontal(const Image &im, float sigma, float truncate, bool clamp)
 {
 	std::vector<float> kernel = gauss1DFilterValues(sigma, truncate);
-	Filter filter(kernel, 2*truncate*sigma+1, 1);
-	return filter.convolve(im);
+	Filter filter(kernel, 2*ceil(truncate*sigma)+1, 1);
+	return filter.convolve(im, clamp);
 }
 
-// Image gaussianBlur_separable(const Image &im, float sigma, float truncate=3.0, bool clamp=true);
-// Image gaussianBlur_2D(const Image &im, float sigma, float truncate=3.0, bool clamp=true);
+
+Image gaussianBlur_2D(const Image &im, float sigma, float truncate, bool clamp)
+{
+	std::vector<float> kernel = gauss2DFilterValues(sigma, truncate);
+	Filter filter(kernel, 2*ceil(truncate*sigma)+1, 2*ceil(truncate*sigma)+1);
+	return filter.convolve(im, clamp);
+}
+
+Image gaussianBlur_separable(const Image &im, float sigma, float truncate, bool clamp)
+{
+	std::vector<float> kernel = gauss1DFilterValues(sigma, truncate);
+	Filter h_filter(kernel, 2*ceil(truncate*sigma)+1, 1);
+	Filter v_filter(kernel, 1, 2*ceil(truncate*sigma)+1);
+	return v_filter.convolve(h_filter.convolve(im, clamp));
+}
+
+// Sharpen an Image
+Image unsharpMask(const Image &im, float sigma, float truncate, float strength, bool clamp)
+{
+	Image low_pass = gaussianBlur_separable(im, sigma, truncate, clamp);
+	Image output(im.width(), im.height(), im.channels());
+
+	for (int h = 0; h < im.height(); h++) {
+		for (int w = 0; w < im.width(); w++) {
+			output(w, h, 0) = -strength * low_pass(w, h, 0) + im(w, h, 0);
+			output(w, h, 1) = -strength * low_pass(w, h, 1) + im(w, h, 1);
+			output(w, h, 2) = -strength * low_pass(w, h, 2) + im(w, h, 2);
+		}
+	}
+
+	return output;
+}
+
+
+// Bilaterial Filtering
+Image bilateral(const Image &im, float sigmaRange, float sigmaDomain, float truncateDomain, bool clamp)
+{
+	
+}
+// Image bilaYUV(const Image &im, float sigmaRange=0.1, float sigmaY=1.0, float sigmaUV=4.0, float truncateDomain=3.0, bool clamp=true);
 
 /**************************************************************
  //               DON'T EDIT BELOW THIS LINE                //

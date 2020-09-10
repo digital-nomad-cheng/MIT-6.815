@@ -19,4 +19,13 @@ int main() {
 
     Image output4 = gaussianBlur_horizontal(input, 3.0);
     output4.write("../Output/boston_horizontal_gaussian_blur.png");
+
+    Image output5 = gaussianBlur_2D(input, 3.0);
+    output5.write("../Output/boston_2D_gaussian_blur.png");
+
+    Image output6 = gaussianBlur_separable(input, 3.0);
+    output6.write("../Output/boston_2D_separable_gaussian_blur.png");
+
+    Image output7 = unsharpMask(input, 3.0, 3.0, 0.5);
+    output7.write("../Output/boston_unsharp_mask.png");
 }
