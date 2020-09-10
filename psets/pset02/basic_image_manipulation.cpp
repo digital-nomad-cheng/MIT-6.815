@@ -1,15 +1,14 @@
 /* -----------------------------------------------------------------
- * File:    a2.cpp
- * Created: 2015-09-09
+ * File:    basic_image_manipulation.cpp
+ * Created: 2020-09-10
  * -----------------------------------------------------------------
  * 
- * Implementation file for PS01
- *
- * We define and implement the functions we declared in a2.h
+ * Assignment 02
+ * We define and implement the functions we declared in basic_image_manipulation.hpp
  * 
  * ---------------------------------------------------------------*/
 
-// This command imports all the content of a2.h, thus declaring our functions.
+// This command imports all the content of basic_image_manipulation.hpp, thus declaring our functions.
 #include "basic_image_manipulation.hpp"
 
 // We use the namespace "std" so that we can write the command "cout" instead
