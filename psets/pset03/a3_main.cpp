@@ -1,6 +1,8 @@
 #include "basic_image_manipulation.hpp"
 #include "filtering.hpp"
 #include "align.hpp"
+#include "demosaic.hpp"
+
 
 using namespace std;
 
@@ -25,5 +27,9 @@ int main() {
 
     Image SNRIm = logSNR(seq,float(1/30.0));
     SNRIm.write("../Output/snr_map.png");
+
+    Image raw = Image("../Input/raw/signs-small.png");
+    Image green = basicGreen(raw, 0);
+    green.write("../Output/demosaic_green.png");
 
 }

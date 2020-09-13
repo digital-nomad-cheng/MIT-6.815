@@ -8,14 +8,14 @@
  * ------------------------------------------------------------------------*/
 
 
-#ifndef __demosaic__hpp
-#define __demosaic__hpp
+#ifndef __demosaic__hpp__
+#define __demosaic__hpp__
 
 
 #include <iostream>
 #include <math.h>
 
-#include "image.h"
+#include "image.hpp"
 #include "basic_image_manipulation.hpp"
 
 using namespace std;
