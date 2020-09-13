@@ -10,8 +10,8 @@
 
 
 
-#ifndef __align__hpp
-#define __align__hpp
+#ifndef __align__hpp__
+#define __align__hpp__
 
 #include <iostream>
 #include <cmath>
