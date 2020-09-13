@@ -51,14 +51,22 @@ clean:
 # rule for creating the executable: this "links" the .o files using the g++ linker.
 # If .o files are not available, then the rules for creating .o files are run.
 
-$(EXECUTABLE): $(BUILD_DIR)/a3_main.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o
-	$(CXX) $(BUILD_DIR)/a3_main.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o -o $(EXECUTABLE)
+$(EXECUTABLE): $(BUILD_DIR)/a3_main.o $(BUILD_DIR)/demosaic.o $(BUILD_DIR)/align.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o
+	$(CXX) $(BUILD_DIR)/a3_main.o $(BUILD_DIR)/demosaic.o $(BUILD_DIR)/align.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o -o $(EXECUTABLE)
 	mkdir -p $(OUTPUT)
 
 # ------------------------------------------------------------------------------
 
 # rules for creating the .o files:  compile each of the .cpp files and create a
 # corresponding .o file. Each .o depends upon the corresponding .cpp and other .h files
+
+$(BUILD_DIR)/align.o: align.cpp
+	mkdir -p $(BUILD_DIR)
+	$(CXX) -c align.cpp -o $(BUILD_DIR)/align.o
+
+$(BUILD_DIR)/demosaic.o: demosaic.cpp
+	mkdir -p $(BUILD_DIR)
+	$(CXX) -c demosaic.cpp -o $(BUILD_DIR)/demosaic.o
 
 $(BUILD_DIR)/filtering.o: filtering.cpp
 	mkdir -p $(BUILD_DIR)
