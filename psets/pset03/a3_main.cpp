@@ -50,6 +50,14 @@ int main() {
     Image edge_green = edgeBasedGreen(raw, 1);
     edge_green.write("../Output/demosaic_edge_green.png");
 
-    Image rgb_edge = edgeBasedGreenDemosaic(raw, 1, 1,1,0,0);
+    Image rgb_edge = edgeBasedGreenDemosaic(raw, 1, 1, 1, 0, 0);
     rgb_edge.write("../Output/demosaiced_edge.png");
+
+    Image edge_red = basicRorB(raw, 1, 1);
+    edge_red.write("../Output/demosaic_edge_red.png");
+    Image edge_blue = basicRorB(raw, 0, 0);
+    edge_blue.write("../Output/demosaic_edge_blue.png");
+
+    Image rgb_green_edge = improvedDemosaic(raw, 1, 1, 1, 0, 0);
+    rgb_green_edge.write("../Output/demosaic_improved.png");
 }

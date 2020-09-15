@@ -136,3 +136,37 @@ Image edgeBasedGreenDemosaic(const Image &raw, int offsetGreen, int offsetRedX, 
 
 }
 
+Image greenBasedRorB(const Image &raw, Image &green, int offsetX, int offsetY)
+{
+    Image three_channel_green = raw;
+    for (int h = 0; h < raw.height(); h++) {
+        for (int w = 0; w < raw.width(); w++) {
+            for (int c = 0; c < raw.channels(); c++){
+                three_channel_green(w, h, c) = green(w, h);
+            }
+        }
+    }
+    Image raw_minus_green = raw - three_channel_green;
+    Image basic_r_or_b_minus_green = basicRorB(raw_minus_green, offsetX, offsetY);
+    Image greenBasedRorB_im = basic_r_or_b_minus_green + green;
+    return greenBasedRorB_im;
+}
+
+Image improvedDemosaic(const Image &raw, int offsetGreen, int offsetRedX, int offsetRedY, int offsetBlueX, int offsetBlueY)
+{
+    Image green = edgeBasedGreen(raw, offsetGreen);
+    Image red = greenBasedRorB(raw, green, offsetRedX, offsetRedY);
+    Image blue = greenBasedRorB(raw, green, offsetBlueX, offsetBlueY);
+    Image output(raw.width(), raw.height(), raw.channels());
+
+    for (int h = 0; h < raw.height(); h++) {
+        for (int w = 0; w < raw.width(); w++) {
+            output(w, h, 0) = red(w, h);
+            output(w, h, 1) = green(w, h);
+            output(w, h, 2) = blue(w, h);
+        }
+    }
+
+    return output;
+}
+
