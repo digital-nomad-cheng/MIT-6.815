@@ -26,8 +26,7 @@ Image::Image(int x, int y, int z, const std::string &name_) {
     for (int k = 0; k < dimensions(); k++) {
         size_of_data *= dim_values[k];
     }
-    image_data = std::vector<float>(size_of_data,0);
-
+    image_data = std::vector<float>(size_of_data, 0);
 }
 
 void Image::initialize_image_metadata(int x, int y, int z,  const std::string &name_) {
