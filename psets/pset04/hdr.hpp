@@ -12,8 +12,8 @@
 #define __hdr__h
 
 
-#include "Image.hpp"
-#include "basic_image_manipulation.h"
+#include "image.hpp"
+#include "basic_image_manipulation.hpp"
 
 #include <iostream>
 #include <math.h>

@@ -51,7 +51,7 @@ clean:
 # rule for creating the executable: this "links" the .o files using the g++ linker.
 # If .o files are not available, then the rules for creating .o files are run.
 
-$(EXECUTABLE): $(BUILD_DIR)/a4_main.o $(BUILD_DIR)/demosaic.o $(BUILD_DIR)/align.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o
+$(EXECUTABLE): $(BUILD_DIR)/a4_main.o $(BUILD_DIR)/hdr.o $(BUILD_DIR)/demosaic.o $(BUILD_DIR)/align.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o
 	$(CXX) $(BUILD_DIR)/a4_main.o  $(BUILD_DIR)/hdr.o $(BUILD_DIR)/demosaic.o $(BUILD_DIR)/align.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o -o $(EXECUTABLE)
 	mkdir -p $(OUTPUT)
 
