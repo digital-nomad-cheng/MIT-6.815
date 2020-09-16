@@ -40,37 +40,38 @@ void testComputeFactor() {
 }
 
 
-// void testMakeHDR() {
-//     // load an image sequence
-//     vector<Image> imSeq;
+void testMakeHDR() {
+    // load an image sequence
+    vector<Image> imSeq;
 
-//     imSeq.push_back(changeGamma(Image("./Input/design-1.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-2.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-3.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-4.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-5.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-6.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-7.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-1.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-2.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-3.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-4.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-5.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-6.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-7.png"), 1.0/2.2, 1.0f));
 
-//     // generate an hdr image
-//     Image hdr = makeHDR(imSeq);
+    // generate an hdr image
+    Image hdr = makeHDR(imSeq);
+    hdr.debug_write();
 
-//     // save out images clipped to different ranges.
-//     float maxVal = hdr.max();
-//     Image hdrScale0 = hdr/maxVal;
-//     hdrScale0.write("./Output/scaledHDR_design_0.png");
-//     Image hdrScale2 = (2e2)*hdr/maxVal;
-//     hdrScale2.write("./Output/scaledHDR_design_2.png");
-//     Image hdrScale4 = (2e4)*hdr/maxVal;
-//     hdrScale4.write("./Output/scaledHDR_design_4.png");
-//     Image hdrScale6 = (2e6)*hdr/maxVal;
-//     hdrScale6.write("./Output/scaledHDR_design_6.png");
-//     Image hdrScale8 = (2e8)*hdr/maxVal;
-//     hdrScale8.write("./Output/scaledHDR_design_8.png");
-//     Image hdrScale10 = (2e10)*hdr/maxVal;
-//     hdrScale10.write("./Output/scaledHDR_design_10.png");
+    // save out images clipped to different ranges.
+    float maxVal = hdr.max();
+    Image hdrScale0 = hdr/maxVal;
+    hdrScale0.write("../Output/scaledHDR_design_0.png");
+    Image hdrScale2 = (2e2)*hdr/maxVal;
+    hdrScale2.write("../Output/scaledHDR_design_2.png");
+    Image hdrScale4 = (2e4)*hdr/maxVal;
+    hdrScale4.write("../Output/scaledHDR_design_4.png");
+    Image hdrScale6 = (2e6)*hdr/maxVal;
+    hdrScale6.write("../Output/scaledHDR_design_6.png");
+    Image hdrScale8 = (2e8)*hdr/maxVal;
+    hdrScale8.write("../Output/scaledHDR_design_8.png");
+    Image hdrScale10 = (2e10)*hdr/maxVal;
+    hdrScale10.write("../Output/scaledHDR_design_10.png");
 
-// }
+}
 
 // // HDR and Tone Mapping on Ante2 images
 // void testToneMapping_ante2() {
@@ -180,10 +181,11 @@ int main() {
     std::cout << "Before compute factor" << std::endl;
     testComputeFactor();
 
-    /*
     std::cout << "Before makeHDR" << std::endl;
     testMakeHDR();
-    
+
+
+    /*
     std::cout << "before tone ante2" << std::endl;
     testToneMapping_ante2();
     

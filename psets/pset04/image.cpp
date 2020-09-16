@@ -149,6 +149,22 @@ long long Image::number_of_elements() const
     return dim_values[0] * dim_values[1] * dim_values[2];
 }
 
+float Image::min() const {
+    float minf = FLT_MAX;
+    for (int i = 0; i < number_of_elements(); i++) {
+        minf = std::min(minf, (*this)(i));
+    }
+    return minf;
+}
+
+float Image::max() const {
+    float maxf = -FLT_MAX;
+    for (int i = 0; i < number_of_elements(); i++) {
+        maxf = std::max(maxf, (*this)(i));
+    }
+    return maxf;
+}
+
 const float & Image::operator()(int x) const
 {
     // Linear accessor to the image data

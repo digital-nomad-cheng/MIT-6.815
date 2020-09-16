@@ -49,6 +49,8 @@ public:
     // The total number of elements. Should be equal to width()*height()*channels()
     // That is, a 200x100x3 image has 60000 pixels not 20000 pixels
     long long number_of_elements() const;
+    float max() const;
+    float min() const;
 
     // Accessors for the pixel values
     const float & operator()(int x) const;

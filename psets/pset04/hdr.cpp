@@ -51,7 +51,65 @@ float computeFactor(const Image &im1, const Image &w1, const Image &im2, const I
 
 Image makeHDR(vector<Image> &imSeq, float epsilonMini, float epsilonMaxi)
 {
+	// --------- HANDOUT  PS04 ------------------------------
+    // Merge images to make a single hdr image
+    // For each image in the sequence, compute the weight map (special cases
+    // for the first and last images).
+    // Compute the exposure factor for each consecutive pair of image.
+    // Write the valid pixel to your hdr output, taking care of rescaling them
+    // properly using the factor.
 
+    vector<Image> weightSeq;
+    for (int i = 0; i < imSeq.size(); i++){
+        float mini = epsilonMini;
+        if (i == imSeq.size() - 1){
+            mini = FLT_MIN;
+        }
+        float maxi = epsilonMaxi;
+        if (i == 0){
+            maxi = FLT_MAX;
+        }
+        weightSeq.push_back(computeWeight(imSeq[i], mini, maxi));
+    }
+
+    vector<float> weight_factors_individual;
+    vector<float> weight_factors_cumulative;
+    float cumulative_factor = 1.0;
+    weight_factors_cumulative.push_back(cumulative_factor);
+    for (int a = 0; a < weightSeq.size() - 1; a++){    
+        float factor = computeFactor(imSeq[a], weightSeq[a], imSeq[a+1], weightSeq[a+1]);
+        weight_factors_individual.push_back(factor);
+        
+        cumulative_factor *= factor;
+        weight_factors_cumulative.push_back(cumulative_factor);
+    }
+    
+    Image darkest = imSeq[0];
+    Image output(imSeq[0].width(), imSeq[0].height(), imSeq[0].channels());
+    for (int a = 0; a < darkest.width(); a++){
+        for (int b = 0; b < darkest.height(); b++){
+            for (int c = 0; c < darkest.channels(); c++){
+                float pixel_value_sum = 0;
+                float valid_counter = 0;
+                for (int i = 0; i < imSeq.size(); i++){
+                    float pixel_weight = weightSeq[i](a,b,c);
+                    float pixel_value = imSeq[i](a,b,c);
+                    if (pixel_weight > 0){
+                        pixel_value_sum += pixel_value/weight_factors_cumulative[i];
+                        valid_counter++;
+                    }
+                }
+                if (valid_counter == 0){
+                    output(a,b,c) = darkest(a,b,c);
+                }
+                else {
+                    output(a,b,c) = pixel_value_sum/valid_counter;
+                }
+            }
+        }
+    }
+
+    return output;
 }
 
 /*********************************************************************
