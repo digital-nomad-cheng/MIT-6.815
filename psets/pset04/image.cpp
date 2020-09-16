@@ -152,7 +152,7 @@ long long Image::number_of_elements() const
 const float & Image::operator()(int x) const
 {
     // Linear accessor to the image data
-    if (x >= 0 && x < this->width()) {
+    if (x >= 0 && x < this->width()*this->height()*this->channels()) {
         return image_data[x];
     } else {
         throw OutOfBoundsException();
@@ -183,7 +183,7 @@ const float & Image::operator()(int x, int y, int z) const
 
 float & Image::operator()(int x) {
     // Linear setter to the image data
-    if (x >= 0 && x <= this->width()) {
+    if (x >= 0 && x < this->width()*this->height()*this->channels()) {
         return image_data[x];
     } else {
         throw OutOfBoundsException();
