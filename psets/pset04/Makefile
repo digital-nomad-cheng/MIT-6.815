@@ -52,13 +52,17 @@ clean:
 # If .o files are not available, then the rules for creating .o files are run.
 
 $(EXECUTABLE): $(BUILD_DIR)/a4_main.o $(BUILD_DIR)/demosaic.o $(BUILD_DIR)/align.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o
-	$(CXX) $(BUILD_DIR)/a4_main.o $(BUILD_DIR)/demosaic.o $(BUILD_DIR)/align.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o -o $(EXECUTABLE)
+	$(CXX) $(BUILD_DIR)/a4_main.o  $(BUILD_DIR)/hdr.o $(BUILD_DIR)/demosaic.o $(BUILD_DIR)/align.o $(BUILD_DIR)/filtering.o $(BUILD_DIR)/basic_image_manipulation.o $(BUILD_DIR)/Image.o $(BUILD_DIR)/lodepng.o -o $(EXECUTABLE)
 	mkdir -p $(OUTPUT)
 
 # ------------------------------------------------------------------------------
 
 # rules for creating the .o files:  compile each of the .cpp files and create a
 # corresponding .o file. Each .o depends upon the corresponding .cpp and other .h files
+
+$(BUILD_DIR)/hdr.o: hdr.cpp
+	mkdir -p $(BUILD_DIR)
+	$(CXX) -c hdr.cpp -o $(BUILD_DIR)/hdr.o
 
 $(BUILD_DIR)/align.o: align.cpp
 	mkdir -p $(BUILD_DIR)
