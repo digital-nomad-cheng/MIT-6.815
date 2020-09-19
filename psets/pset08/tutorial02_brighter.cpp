@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     // on the input image.
     Halide::Buffer<uint8_t> output = brighter.realize(input.width(), input.height(), input.channels());
 
-    Halide::Tools::save_image(output, "brighter.png");
+    Halide::Tools::save_image(output, "Output/brighter.png");
 
     cout << "Success!\n" << endl;
 
