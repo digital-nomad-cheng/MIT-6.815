@@ -1,0 +1,10 @@
+g++ tutorial01*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide -o tutorial01 -std=c++11
+g++ tutorial02*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide `libpng-config --cflags --ldflags` -ljpeg -o tutorial02 -std=c++11
+g++ tutorial03*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide `libpng-config --cflags --ldflags` -ljpeg -o tutorial03 -std=c++11
+g++ tutorial04*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide `libpng-config --cflags --ldflags` -ljpeg -o tutorial04 -std=c++11
+g++ tutorial05*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide `libpng-config --cflags --ldflags` -ljpeg -o tutorial05 -std=c++11
+g++ tutorial06*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide `libpng-config --cflags --ldflags` -ljpeg -o tutorial06 -std=c++11
+g++ tutorial07*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide `libpng-config --cflags --ldflags` -ljpeg -o tutorial07 -std=c++11
+g++ tutorial08*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide `libpng-config --cflags --ldflags` -ljpeg -o tutorial08 -std=c++11
+g++ tutorial09*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide `libpng-config --cflags --ldflags` -ljpeg -o tutorial09 -std=c++11
+g++ tutorial10*.cpp -g -I /Users/vincent/Libs/Halide/tools/ -L /usr/local/lib/ -lHalide `libpng-config --cflags --ldflags` -ljpeg -o tutorial10 -std=c++11
