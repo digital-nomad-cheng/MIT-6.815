@@ -14,6 +14,7 @@
 
 #include "image.hpp"
 #include "basic_image_manipulation.hpp"
+#include "filtering.hpp"
 
 #include <iostream>
 #include <math.h>

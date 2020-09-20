@@ -58,6 +58,7 @@ void testMakeHDR() {
 
     // save out images clipped to different ranges.
     float maxVal = hdr.max();
+    std::cout << maxVal << std::endl;
     Image hdrScale0 = hdr/maxVal;
     hdrScale0.write("../Output/scaledHDR_design_0.png");
     Image hdrScale2 = (2e2)*hdr/maxVal;
@@ -73,108 +74,110 @@ void testMakeHDR() {
 
 }
 
-// // HDR and Tone Mapping on Ante2 images
-// void testToneMapping_ante2() {
+// HDR and Tone Mapping on Ante2 images
+void testToneMapping_ante2() {
     
-//     // load images
-//     vector<Image> imSeq;
-//     imSeq.push_back(changeGamma(Image("./Input/ante2-1.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/ante2-2.png"), 1.0/2.2, 1.0f));
+    // load images
+    vector<Image> imSeq;
+    imSeq.push_back(changeGamma(Image("../Input/ante2-1.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/ante2-2.png"), 1.0/2.2, 1.0f));
     
-//     // create hdr image
-//     std::cout << "In ante2 before makeHDR" << std::endl;
+    // create hdr image
+    std::cout << "In ante2 before makeHDR" << std::endl;
 
-//     Image hdr = makeHDR(imSeq);
-//     std::cout << "In ante2 after makeHDR" << std::endl;
+    Image hdr = makeHDR(imSeq);
+    std::cout << "In ante2 after makeHDR" << std::endl;
     
-//     std::cout << "In tone map with gaussian blur " << std::endl;
-//     // tone map with gaussian blur
-//     Image tm = toneMap(hdr, 100, 1, false);
-//     std::cout << "After tone map with gaussian blur" << std::endl;
-//     tm = changeGamma(tm, 1.0, 1.0/2.2);
-//     tm.write("./Output/ante2-tonedHDRsimple-gauss.png");
+    std::cout << "In tone map with gaussian blur " << std::endl;
+    // tone map with gaussian blur
+    Image tm = toneMap(hdr, 100, 1, false);
+    std::cout << "After tone map with gaussian blur" << std::endl;
+    tm = changeGamma(tm, 1.0, 1.0/2.2);
+    tm.write("../Output/ante2-tonedHDRsimple-gauss.png");
 
-//     tm = toneMap(hdr, 100, 3, true, 0.1);
-//     tm = changeGamma(tm, 1.0, 1.0/2.2);
-//     tm.write("./Output/ante2-tonedHDRsimple-bilateral.png");
+    // tone map with bilateral blur
+    tm = toneMap(hdr, 100, 3, true, 0.1);
+    tm = changeGamma(tm, 1.0, 1.0/2.2);
+    tm.write("../Output/ante2-tonedHDRsimple-bilateral.png");
     
-// }
+}
 
-// // HDR and Tone Mapping on Ante3 images
-// void testToneMapping_ante3() {
+// HDR and Tone Mapping on Ante3 images
+void testToneMapping_ante3() {
     
-//     // load images
-//     vector<Image> imSeq;
-//     imSeq.push_back(changeGamma(Image("./Input/ante3-1.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/ante3-2.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/ante3-3.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/ante3-4.png"), 1.0/2.2, 1.0f));
+    // load images
+    vector<Image> imSeq;
+    imSeq.push_back(changeGamma(Image("../Input/ante3-1.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/ante3-2.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/ante3-3.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/ante3-4.png"), 1.0/2.2, 1.0f));
 
-//     // create hdr image
-//     Image hdr = makeHDR(imSeq);
+    // create hdr image
+    Image hdr = makeHDR(imSeq);
 
-//     // tone map with gaussian blur
-//     Image tm = changeGamma(toneMap(hdr, 100, 1),1.0f, 1.0f/2.2f);
-//     tm.write("./Output/ante3-tonedHDRsimple-gauss.png");
+    // tone map with gaussian blur
+    Image tm = changeGamma(toneMap(hdr, 100, 1),1.0f, 1.0f/2.2f);
+    tm.write("../Output/ante3-tonedHDRsimple-gauss.png");
     
-//     // tone map with bilaterial
-//     tm = changeGamma(toneMap(hdr, 100, 3, true, 0.1),1.0f, 1.0f/2.2f);
-//     tm.write("./Output/ante3-tonedHDRsimple-bilateral.png");
+    // tone map with bilaterial
+    tm = changeGamma(toneMap(hdr, 100, 3, true, 0.1),1.0f, 1.0f/2.2f);
+    tm.write("../Output/ante3-tonedHDRsimple-bilateral.png");
     
-// }
+}
 
-// // HDR and Tone Mapping on Boston Images
-// void testToneMapping_boston() {
+// HDR and Tone Mapping on Boston Images
+void testToneMapping_boston() {
     
-//     // load images
-//     vector<Image> imSeq;
-//     imSeq.push_back(changeGamma(Image("./Input/boston-1.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/boston-2.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/boston-3.png"), 1.0/2.2, 1.0f));
+    // load images
+    vector<Image> imSeq;
+    imSeq.push_back(changeGamma(Image("../Input/boston-1.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/boston-2.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/boston-3.png"), 1.0/2.2, 1.0f));
 
-//     // create hdr image
-//     Image hdr = makeHDR(imSeq);
+    // create hdr image
+    Image hdr = makeHDR(imSeq);
     
-//     // tone map with gaussian blur
-//     Image tm = toneMap(hdr, 100, 1, false);
-//     tm = changeGamma(tm, 1.0, 1.0/2.2);
-//     tm.write("./Output/boston-tonedHDRsimple-gauss.png");
+    // tone map with gaussian blur
+    Image tm = toneMap(hdr, 100, 1, false);
+    tm = changeGamma(tm, 1.0, 1.0/2.2);
+    tm.write("../Output/boston-tonedHDRsimple-gauss.png");
 
-//     // tone map with bilaterial
-//     tm = toneMap(hdr, 100, 3, true, 0.1);
-//     tm = changeGamma(tm, 1.0, 1.0/2.2);
-//     tm.write("./Output/boston-tonedHDRsimple-bilateral.png");
-// }
+    // tone map with bilaterial
+    tm = toneMap(hdr, 100, 3, true, 0.1);
+    tm = changeGamma(tm, 1.0, 1.0/2.2);
+    tm.write("../Output/boston-tonedHDRsimple-bilateral.png");
+}
 
-// void testToneMapping_design() {
+void testToneMapping_design() {
     
-//     // load images
-//     vector<Image> imSeq;
-//     imSeq.push_back(changeGamma(Image("./Input/design-1.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-2.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-3.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-4.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-5.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-6.png"), 1.0/2.2, 1.0f));
-//     imSeq.push_back(changeGamma(Image("./Input/design-7.png"), 1.0/2.2, 1.0f));
+    // load images
+    vector<Image> imSeq;
+    imSeq.push_back(changeGamma(Image("../Input/design-1.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-2.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-3.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-4.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-5.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-6.png"), 1.0/2.2, 1.0f));
+    imSeq.push_back(changeGamma(Image("../Input/design-7.png"), 1.0/2.2, 1.0f));
     
-//     // create hdr image
-//     Image hdr = makeHDR(imSeq);
+    // create hdr image
+    Image hdr = makeHDR(imSeq);
     
-//     // tone map with gaussian blur
-//     Image tm = toneMap(hdr, 100, 1, false);
-//     tm = changeGamma(tm, 1.0, 1.0/2.2);
-//     tm.write("./Output/design-tonedHDRsimple-gauss.png");
+    // tone map with gaussian blur
+    Image tm = toneMap(hdr, 100, 1, false);
+    tm = changeGamma(tm, 1.0, 1.0/2.2);
+    tm.write("../Output/design-tonedHDRsimple-gauss.png");
     
-//     // Note: bilaterial filtering these images takes a very long time. It is not
-//     // necessary to attempt this for testing
-// }
+    // Note: bilaterial filtering these images takes a very long time. It is not
+    // necessary to attempt this for testing
+}
 
 
 // This is a way for you to test your functions. 
 // We will only grade the contents of demosaic.cpp and align.cpp
 int main() {
     
+    /*
     std::cout << "Before compute weight" << std::endl;
     testComputeWeight();
     
@@ -183,18 +186,21 @@ int main() {
 
     std::cout << "Before makeHDR" << std::endl;
     testMakeHDR();
+    */
 
-
-    /*
+    
     std::cout << "before tone ante2" << std::endl;
     testToneMapping_ante2();
+
     
     std::cout << "before tone ante3" << std::endl;
     testToneMapping_ante3();
+
     std::cout << "before tone boston" << std::endl;
     testToneMapping_boston();
-    
+
+    std::cout << "before tone desing" << std::endl;
     testToneMapping_design();
-    */
+    
     return 0;
 }

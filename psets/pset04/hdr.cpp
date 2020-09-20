@@ -2,6 +2,10 @@
 
 Image computeWeight(const Image &im, float epsilonMini, float epsilonMaxi)
 {
+    // --------- HANDOUT  PS04 ------------------------------
+    // Generate a weight image that indicates which pixels are good to use in
+    // HDR, i.e. weight=1 when the pixel value is in [epsilonMini, epsilonMaxi].
+    // The weight is per pixel, per channel.
 	Image output(im.width(), im.height(), im.channels());
 	for (int h = 0; h < im.height(); h++) {
 		for (int w = 0; w < im.width(); w++) {
@@ -19,13 +23,18 @@ Image computeWeight(const Image &im, float epsilonMini, float epsilonMaxi)
 
 float computeFactor(const Image &im1, const Image &w1, const Image &im2, const Image &w2)
 {
+    // --------- HANDOUT  PS04 ------------------------------
+    // Compute the multiplication factor between a pair of images. This
+    // gives us the relative exposure between im1 and im2. It is computed as 
+    // the median of im2/(im1+eps) for some small eps, taking into account
+    // pixels that are valid in both images.
 	std::vector<float> usable_im1;
 	std::vector<float> usable_im2;
 
 	for (int h = 0; h < im1.height(); h++) {
 		for (int w = 0; w < im1.width(); w++) {
 			for (int c = 0; c < im1.channels(); c++) {
-				if (w1(w, h, c) == w2(w, h, c) == 1.0) {
+				if (w1(w, h, c) == 1.0 && w2(w, h, c) == 1.0) {
 					usable_im1.push_back(im1(w, h, c));
 					usable_im2.push_back(im2(w, h, c));
 				}
@@ -44,7 +53,7 @@ float computeFactor(const Image &im1, const Image &w1, const Image &im2, const I
 	// std::cout << usable_im1.size() << std::endl;
 	// im1.debug_write();
 	// std::cout << usable_im2[mid] << " " << usable_im1[mid] << std::endl;
-	int mid = usable_im1.size() / 2;
+	int mid = floor(usable_im1.size() / 2);
 	
 	return usable_im2[mid] / (usable_im1[mid] + pow(10, -10));
 }
@@ -111,6 +120,101 @@ Image makeHDR(vector<Image> &imSeq, float epsilonMini, float epsilonMaxi)
 
     return output;
 }
+
+Image toneMap(const Image &im, float targetBase, float detailAmp, bool useBila, float sigmaRange)
+{
+    // --------- HANDOUT  PS04 ------------------------------
+    // tone map an hdr image
+    // - Split the image into its luminance-chrominance components.
+    // - Work in the log10 domain for the luminance
+    
+    std::vector<Image> images = lumiChromi(im);
+    Image lumi = images[0];
+    Image chrom = images[1];
+
+    // std::cout << "non min zero:" << image_minnonzero(lumi) << std::endl;
+
+    Image log10_lumi = log10Image(lumi);
+
+    int max_side = max(im.width(), im.height());
+    float sigma = max_side / 50.0;
+
+    Image blur_lumi = im;
+    if (useBila) {
+        blur_lumi = bilateral(log10_lumi, sigmaRange, sigma);
+    } else {
+        blur_lumi = gaussianBlur_separable(log10_lumi, sigma);
+    }
+
+    Image detail = log10_lumi - blur_lumi;
+
+    float large_range = blur_lumi.max() - blur_lumi.min();
+
+    float k = log10(targetBase) / large_range;
+
+    Image log10_output = detailAmp * detail + k*(blur_lumi - blur_lumi.max());
+
+    // Image log10_output = detailAmp * detail + k*blur_lumi;
+
+    // float offset = -log10_output.max();
+    Image output = exp10Image(log10_output);
+
+
+    images.clear();
+    images.push_back(output);
+    images.push_back(chrom);
+
+    return lumiChromi2rgb(images);
+}
+
+
+Image exp10Image(const Image &im)
+{
+    Image output = im;
+    for (int c = 0; c < im.channels(); c++) {
+        for (int h = 0; h < im.height(); h++) {
+            for (int w = 0; w < im.width(); w++) {
+                output(w, h, c) = pow(10.0, im(w, h, c));
+            }
+        }
+    }
+    return output;
+}
+
+Image log10Image(const Image &im)
+{
+    Image output = im;
+    float min_nonzero = image_minnonzero(im);
+    for (int c = 0; c < im.channels(); c++) {
+        for (int h = 0; h < im.height(); h++) {
+            for (int w = 0; w < im.width(); w++) {
+                if (im(w, h, c) == 0.0) {
+                    output(w, h, c) =  log10(min_nonzero);
+                } else {
+                    output(w, h, c) = log10(im(w, h, c));
+                }
+            }
+        }
+    }
+    return output;
+
+}
+
+float image_minnonzero(const Image &im)
+{
+    float min_nonzero = FLT_MAX;
+    for (int c = 0; c < im.channels(); c++) {
+        for (int h = 0; h < im.height(); h++) {
+            for (int w = 0; w < im.width(); w++) {
+                if (min_nonzero > im(w, h, c) && im(w, h, c) != 0.0) {
+                    min_nonzero = im(w, h, c);
+                }
+            }
+        }
+    }
+    return min_nonzero;
+}
+
 
 /*********************************************************************
  *                       Do not edit below                           *
