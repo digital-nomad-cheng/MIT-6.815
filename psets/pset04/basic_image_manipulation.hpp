@@ -29,6 +29,8 @@ Image color2gray(const Image &im,
 
 std::vector<Image> lumiChromi(const Image &im);
 
+Image lumiChromi2rgb(const vector<Image> & lc);
+
 Image brightnessContrastLumi(const Image &im, float brightF, float contrastF, float midpoint = 0.3);
 
 Image rgb2yuv(const Image &im);

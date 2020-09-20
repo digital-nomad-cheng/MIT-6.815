@@ -76,6 +76,23 @@ std::vector<Image> lumiChromi(const Image &im)
     return result;
 }
 
+Image lumiChromi2rgb(const vector<Image> & lc) {
+    // luminance is lc[0]
+    // chrominance is lc[1]
+
+    // Create chrominance images
+    // We copy the input as starting point for the chrominance
+    Image im = Image(lc[1].width(), lc[1].height(), lc[1].channels()); 
+    for (int c = 0 ; c < im.channels(); c++ )
+    for (int y = 0 ; y < im.height(); y++) 
+    for (int x = 0 ; x < im.width(); x++)
+    {
+        im(x,y,c) = lc[1](x,y,c) * lc[0](x,y);
+    }
+
+    return im;
+}
+
 Image brightnessContrastLumi(const Image &im, float brightF, float contrastF, float midpoint)
 {
     std::vector<Image> images = lumiChromi(im);
