@@ -291,53 +291,53 @@ Image operator/ (const Image & im1, const Image & im2)
 }
 
 // Image/scalar operations 
-Image operator+ (const Image & im1, const float & c)
+Image operator+ (const Image & im1, const float & factor)
 {
     Image output(im1.width(), im1.height(), im1.channels());
     for (int c = 0; c < im1.channels(); c++) {
         for (int h = 0; h < im1.height(); h++) {
             for (int w = 0; w < im1.width(); w++) {
-                output(w, h, c) = im1(w, h, c) + c;
+                output(w, h, c) = im1(w, h, c) + factor;
             } 
         }
     }
     return output;
 
 }
-Image operator- (const Image & im1, const float & c)
+Image operator- (const Image & im1, const float & factor)
 {
     Image output(im1.width(), im1.height(), im1.channels());
     for (int c = 0; c < im1.channels(); c++) {
         for (int h = 0; h < im1.height(); h++) {
             for (int w = 0; w < im1.width(); w++) {
-                output(w, h, c) = im1(w, h, c) - c;
+                output(w, h, c) = im1(w, h, c) - factor;
             } 
         }
     }
     return output;
 }
-Image operator* (const Image & im1, const float & c)
+Image operator* (const Image & im1, const float & factor)
 {
     Image output(im1.width(), im1.height(), im1.channels());
     for (int c = 0; c < im1.channels(); c++) {
         for (int h = 0; h < im1.height(); h++) {
             for (int w = 0; w < im1.width(); w++) {
-                output(w, h, c) = im1(w, h, c) * c;
+                output(w, h, c) = im1(w, h, c) * factor;
             } 
         }
     }
     return output;
 }
-Image operator/ (const Image & im1, const float & c)
+Image operator/ (const Image & im1, const float & factor)
 {
-    if (c == 0.0) {
+    if (factor == 0.0) {
         throw DivideByZeroException();
     }
     Image output(im1.width(), im1.height(), im1.channels());
     for (int c = 0; c < im1.channels(); c++) {
         for (int h = 0; h < im1.height(); h++) {
             for (int w = 0; w < im1.width(); w++) {
-                output(w, h, c) = im1(w, h, c) / c;
+                output(w, h, c) = im1(w, h, c) / factor;
             } 
         }
     }
@@ -345,44 +345,44 @@ Image operator/ (const Image & im1, const float & c)
 }
 
 // scalar/Image operations 
-Image operator+ (const float & c, const Image & im1)
+Image operator+ (const float & factor, const Image & im1)
 {
     Image output(im1.width(), im1.height(), im1.channels());
     for (int c = 0; c < im1.channels(); c++) {
         for (int h = 0; h < im1.height(); h++) {
             for (int w = 0; w < im1.width(); w++) {
-                output(w, h, c) = c + im1(w, h, c);
+                output(w, h, c) = factor + im1(w, h, c);
             } 
         }
     }
     return output;
 }
-Image operator- (const float & c, const Image & im1)
+Image operator- (const float & factor, const Image & im1)
 {
     Image output(im1.width(), im1.height(), im1.channels());
     for (int c = 0; c < im1.channels(); c++) {
         for (int h = 0; h < im1.height(); h++) {
             for (int w = 0; w < im1.width(); w++) {
-                output(w, h, c) = c - im1(w, h, c);
+                output(w, h, c) = factor - im1(w, h, c);
             } 
         }
     }
     return output;
 
 }
-Image operator* (const float & c, const Image & im1)
+Image operator* (const float & factor, const Image & im1)
 {
     Image output(im1.width(), im1.height(), im1.channels());
     for (int c = 0; c < im1.channels(); c++) {
         for (int h = 0; h < im1.height(); h++) {
             for (int w = 0; w < im1.width(); w++) {
-                output(w, h, c) = c * im1(w, h, c);
+                output(w, h, c) = factor * im1(w, h, c);
             } 
         }
     }
     return output;
 }
-Image operator/ (const float & c, const Image & im1)
+Image operator/ (const float & factor, const Image & im1)
 {
     Image output(im1.width(), im1.height(), im1.channels());
     for (int c = 0; c < im1.channels(); c++) {
@@ -391,7 +391,7 @@ Image operator/ (const float & c, const Image & im1)
                 if (im1(w, h, c) == 0.0) {
                     throw DivideByZeroException();
                 }
-                output(w, h, c) = c / im1(w, h, c);
+                output(w, h, c) = factor / im1(w, h, c);
             } 
         }
     }
