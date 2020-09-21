@@ -296,15 +296,20 @@ Image rotate(const Image &im, float theta)
     int center_x = im.width() / 2;
     int center_y = im.height() / 2;
 
+
     for (int c = 0; c < im.channels(); c++) {
         for (int h = 0; h < im.height(); h++) {
             for (int w = 0; w < im.width(); w++) {
-                float hyp = sqrt(pow(w - center_x, 2.0) + pow(h - center_y, 2.0));
-                float flag_w = (w - center_x) / (abs(w - center_x) + 10e-10);
-                float flag_h = (h - center_y) / (abs(h - center_y) + 10e-10);
-                float orig_w = flag_w*cos(theta)*hyp + center_x;
-                float orig_h = flag_h*sin(theta)*hyp + center_y;
-                output(w, h, c) = interpolateLin(im, orig_w, orig_h, c);
+                // float hyp = sqrt(pow(w - center_x, 2.0) + pow(h - center_y, 2.0));
+                // float flag_w = (w - center_x) / (abs(w - center_x) + 10e-10);
+                // float flag_h = (h - center_y) / (abs(h - center_y) + 10e-10);
+                // float orig_w = flag_w*cos(theta)*hyp + center_x;
+                // float orig_h = flag_h*sin(theta)*hyp + center_y;
+            float orig_w = (static_cast<float>(w) - center_x) * cos(theta) +
+             (center_y - static_cast<float>(h)) * sin(theta) + center_x;
+            float orig_h = center_y - (-(static_cast<float>(w) - center_x) * sin(theta) +
+                        (center_y - static_cast<float>(h)) * cos(theta));
+            output(w, h, c) = interpolateLin(im, orig_w, orig_h, c);
             }
         }
     }
