@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>PSET03 UI</title>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/raphael-min.js"></script>
+        <script src="js/ui.js"></script>
+        <script>
+            // Change this to points to your image
+            path1       = 'Input/fredo2.png';
+            path2       = 'Input/werewolf.png';
+
+            // ----- Don't change what's below --------
+            imagewidth  = 0;
+            imageheight = 0;
+            var img = new Image;
+            img.onload = function() {
+                imagewidth  = img.width;
+                imageheight = img.height;
+                console.log(imagewidth, imageheight);
+            };
+                
+            img.src = path1;
+
+        </script>
+    </head>
+
+    <body>
+        <div id="canvas">
+        </div>
+        <table border="0">
+            <tr>
+                <td id="seg1_cell"><p id="seg1">vector&lt;Segment&gt; segsBefore;<br /> </p></td>
+                <td><p id="seg2">vector&lt;Segment&gt; segsAfter;<br /> </p></td>
+            </tr>
+        </table>
+        <p id="debug"></p>
+    </body>
+</html>
