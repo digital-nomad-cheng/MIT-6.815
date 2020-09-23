@@ -4,8 +4,8 @@
 #include <cassert>
 #include <ctime>
 
-// for 6.865 only
-#include "homography_extra_tests.hpp"
+// // for 6.865 only
+// #include "homography_extra_tests.hpp"
 
 using namespace std;
 
@@ -27,12 +27,12 @@ void testApplyHomography() {
     cout << H << endl;
 
     // Load inputs
-    Image poster("Input/poster.png");
-    Image green("Input/green.png");
+    Image poster("../Input/poster.png");
+    Image green("../Input/green.png");
 
     // apply homography 
     applyHomography(poster, H, green, true);
-    green.write("Output/apply_homography.png");
+    green.write("../Output/apply_homography.png");
 }
 
 
