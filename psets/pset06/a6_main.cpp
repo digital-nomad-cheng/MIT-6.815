@@ -36,35 +36,35 @@ void testApplyHomography() {
 }
 
 
-// void testComputeHomography() {
-//     Image poster("Input/poster.png");
-//     Image green("Input/green.png");
+void testComputeHomography() {
+    Image poster("../Input/poster.png");
+    Image green("../Input/green.png");
 
-//     // build 3D array (easier to initialize)
-//     float w = (float) poster.width();
-//     float h = (float) poster.height();
-//     Vec3f p1;
-//     Vec3f p2;
+    // build 3D array (easier to initialize)
+    float w = (float) poster.width();
+    float h = (float) poster.height();
+    Vec3f p1;
+    Vec3f p2;
 
-//     CorrespondencePair corresp[4] = {
-//         CorrespondencePair( 0,0,1, 96,171,1), 
-//         CorrespondencePair( w-1,0,1, 235,174,1), 
-//         CorrespondencePair( w-1,h-1,1, 235,232,1), 
-//         CorrespondencePair( 0,h-1,1, 95,238,1)
-//     };
+    CorrespondencePair corresp[4] = {
+        CorrespondencePair( 0,0,1, 96,171,1), 
+        CorrespondencePair( w-1,0,1, 235,174,1), 
+        CorrespondencePair( w-1,h-1,1, 235,232,1), 
+        CorrespondencePair( 0,h-1,1, 95,238,1)
+    };
 
-//     // Compute homography.
-//     Matrix Hcomputed = computeHomography(corresp);
+    // Compute homography.
+    Matrix Hcomputed = computeHomography(corresp);
     
-//     // This should get you the values from 
-//     // testApplyHomography(); (or close to)
-//     cout << "Computed homography for bus example from given point pairs" << endl;
-//     cout << Hcomputed << endl;
+    // This should get you the values from 
+    // testApplyHomography(); (or close to)
+    cout << "Computed homography for bus example from given point pairs" << endl;
+    cout << Hcomputed << endl;
 
-//     // Transform image and write output
-//     applyHomography(poster,  Hcomputed, green,  true);
-//     green.write("Output/computeHomography.png");
-// }
+    // Transform image and write output
+    applyHomography(poster,  Hcomputed, green,  true);
+    green.write("../Output/computeHomography.png");
+}
 
 // void testComputeTransformedBBox() {
 //     Matrix H(3, 3);
@@ -216,8 +216,8 @@ int main() {
     // | A few tests |
     // ---------------
     testApplyHomography();
-    return 0;
-    // testComputeHomography();
+   
+    testComputeHomography();
     // testComputeTransformedBBox();
     // testBBoxUnion();
     // testTranslate();

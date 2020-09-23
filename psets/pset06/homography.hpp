@@ -7,6 +7,7 @@
  * 
  * ------------------------------------------------------------------------*/
 
+// Reference: https://github.com/dmckinnon/stitch
 
 #ifndef __homography__hpp__
 #define __homography__hpp__
