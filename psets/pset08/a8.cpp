@@ -42,6 +42,30 @@ Image<uint8_t> SmoothGradNormalized(void) {
     // use apply_auto_schedule(Func f).
 
 
+    Halide::Func smooth_gradient("smooth_gradient");
+
+    Halide::Var x("x");
+    Halide::Var y("y");
+
+    Halide::Expr e = x + y;
+
+    e = Halide::cast<float>(e);
+
+    e = e / 1024;
+
+    e = Halide::cast<uint8_t>(e);
+    
+    smooth_gradient(x, y) = e;
+
+
+    Halide::Buffer<uint8_t> smooth_output = smooth_gradient.realize(512, 512);
+
+
+    // Everything worked! We defined a Func, then called 'realize' on
+    // it to generate and run machine code that produced an Image.
+    cout << "Success!\n" << endl;
+
+    return smooth_output;
 }
 
 Image<uint8_t> WavyRGB(void) {
@@ -57,6 +81,24 @@ Image<uint8_t> WavyRGB(void) {
     // SCHEDULE: use compute_root() on all the Func's you create (i.e.
     // use apply_auto_schedule(Func f).
     
+    Halide::Func wavy_rgb("wavy_rgb");
+
+    Halide::Var w("w");
+    Halide::Var h("h");
+    Halide::Var c("c");
+
+    Halide::Expr e = (1-c)*cos(w)*cos(h);
+
+    e = Halide::cast<uint8_t>(e);
+
+    wavy_rgb(w, h, c) = e;
+
+    wavy_rgb.compute_root();
+
+    Halide::Buffer<uint8_t> output = wavy_rgb.realize(512, 512);
+
+    return output;
+
 
 }
 
