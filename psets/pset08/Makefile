@@ -37,7 +37,7 @@ all: a8 $(APPS)
 	mkdir -p Output
 
 CXXFLAGS := $(PNG_INC) -I$(HALIDE_DIR)/include/ -I$(HALIDE_DIR)/tools/ -I. -g -Wall
-LDFLAGS  := $(PNG_LIB) -L$(HALIDE_DIR)/bin/     -lz -lpthread -ldl -lncurses -lpng
+LDFLAGS  := $(PNG_LIB) -L$(HALIDE_DIR)/build/src/ -lz -lpthread -ldl -lncurses -lpng  -lHalide `libpng-config --cflags --ldflags` -ljpeg
 
 %: %.cpp $(HALIDE_LIB)
 	$(CXX) $(CXXFLAGS) $< $(HALIDE_LIB) $(LDFLAGS) -o $@

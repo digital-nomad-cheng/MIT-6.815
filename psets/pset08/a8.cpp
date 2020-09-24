@@ -20,7 +20,15 @@ using namespace Halide;
 // This applies a compute_root() schedule to all the Func's that are consumed
 // by the calling Func. DO NOT EDIT IT.
 void apply_auto_schedule(Func F) {
-
+    map<string, Internal::Function> flist = Internal::find_transitive_calls(F.function());
+    flist.insert(std::make_pair(F.name(), F.function()));
+    map<string, Internal::Function>::iterator fit;
+    for (fit=flist.begin(); fit!=flist.end(); fit++) {
+        Func f(fit->second);
+        f.compute_root();
+        cout << "Warning: applying default schedule to " << f.name() << endl;
+    }
+    cout << endl;
 }
 
 // ---------------------------------- PART 1 -----------------------------------
@@ -51,14 +59,14 @@ Image<uint8_t> SmoothGradNormalized(void) {
 
     e = Halide::cast<float>(e);
 
-    e = e / 1024;
+    e = e / 1024.0f * 255.f;
 
     e = Halide::cast<uint8_t>(e);
     
     smooth_gradient(x, y) = e;
 
 
-    Halide::Buffer<uint8_t> smooth_output = smooth_gradient.realize(512, 512);
+    Image<uint8_t> smooth_output = smooth_gradient.realize(512, 512);
 
 
     // Everything worked! We defined a Func, then called 'realize' on
@@ -87,19 +95,20 @@ Image<uint8_t> WavyRGB(void) {
     Halide::Var h("h");
     Halide::Var c("c");
 
-    Halide::Expr e = (1-c)*cos(w)*cos(h);
+    float pi = 3.1415927;
 
-    e = Halide::cast<uint8_t>(e);
+    Halide::Expr e = (1-c)*cos(w * pi / 180.0f)*cos(h * pi / 180.0f);
+
+    e = Halide::cast<uint8_t>((e + 1)*127.5f);
 
     wavy_rgb(w, h, c) = e;
 
-    wavy_rgb.compute_root();
+    // wavy_rgb.compute_root();
+    apply_auto_schedule(wavy_rgb);
 
-    Halide::Buffer<uint8_t> output = wavy_rgb.realize(512, 512);
+    Halide::Buffer<uint8_t> output = wavy_rgb.realize(512, 512, 3);
 
     return output;
-
-
 }
 
 Image<uint8_t> Luminance(Image<uint8_t> input) {
