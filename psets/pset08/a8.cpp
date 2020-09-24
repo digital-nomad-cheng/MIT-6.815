@@ -71,7 +71,6 @@ Image<uint8_t> SmoothGradNormalized(void) {
 
     // Everything worked! We defined a Func, then called 'realize' on
     // it to generate and run machine code that produced an Image.
-    cout << "Success!\n" << endl;
 
     return smooth_output;
 }
@@ -122,8 +121,22 @@ Image<uint8_t> Luminance(Image<uint8_t> input) {
     //
     // SCHEDULE: use compute_root() on all the Func's you create (i.e.
     // use apply_auto_schedule(Func f).
-   
+    Halide::Func luminance("luminance");
+    Halide::Var x("x");
+    Halide::Var y("y");
+    Halide::Expr e("e");
 
+    e = input(x, y, 0)*0.3f + input(x, y, 1)*0.6f + input(x, y, 2)*0.1f;
+
+    e = Halide::cast<uint8_t>(e);
+
+    luminance(x, y) = e;
+
+    apply_auto_schedule(luminance);
+
+    Halide::Buffer<uint8_t> output = luminance.realize(input.width(), input.height(), input.channels());
+   
+    return output;
 }
 
 Image<uint8_t> Sobel(Image<uint8_t> input) {
@@ -142,6 +155,47 @@ Image<uint8_t> Sobel(Image<uint8_t> input) {
     //
     // SCHEDULE: use compute_root() on all the Func's you create (i.e.
     // use apply_auto_schedule(Func f).
+
+    Halide::Func sobel("sobel");
+    Halide::Var x("x");
+    Halide::Var y("y");
+
+    Halide::Func clamped("clamped");
+    
+    // clamped = BoundaryConditions::repeat_edge(input);
+    clamped(x,y) =  cast<float>(input(clamp(x, 0, input.width()-1),clamp(y, 0, input.height()-1)));
+
+    Halide::Func x_output("x_output");
+    x_output(x, y) = (-clamped(x-1, y-1) + clamped(x+1, y-1) -
+                             2.0f*clamped(x-1, y) + 2.0f*clamped(x+1, y) -
+                             clamped(x-1, y+1) + clamped(x+1, y+1));
+
+    Halide::Func y_output("y_output");
+    y_output(x, y) = (-clamped(x-1, y-1) - 2.0f*clamped(x, y-1) - clamped(x+1, y-1) + 
+                                clamped(x-1, y+1) + 2.0f*clamped(x, y+1) + clamped(x+1, y+1));
+
+    sobel(x, y) = Halide::cast<uint8_t>(sqrt(pow(x_output(x, y), 2.0f) + pow(y_output(x, y), 2.0f)));
+
+
+
+    apply_auto_schedule(sobel);
+
+    Halide::Buffer<uint8_t> output = sobel.realize(input.width(), input.height());
+
+    return output;
+
+    // Func xKern("xKern");
+    // Func yKern("yKern");
+    // Func sobel("sobel");
+    // Func clamped("clamped");
+    // Var x("x");
+    // Var y("y");
+    // clamped(x,y) =  cast<float>(input(clamp(x, 0, input.width()-1),clamp(y, 0, input.height()-1)));
+    // xKern(x,y) = -clamped(x-1,y-1) -2.0f*clamped(x-1,y) -clamped(x-1,y+1) + clamped(x+1,y-1) + 2.0f*clamped(x+1,y) + clamped(x+1,y+1);
+    // yKern(x,y) = -clamped(x-1,y-1) -2.0f*clamped(x,y-1) -clamped(x+1,y-1) + clamped(x-1,y+1) + 2.0f*clamped(x,y+1) + clamped(x+1,y+1);
+    // sobel(x,y) = cast<uint8_t>(sqrt(pow(xKern(x,y), 2.0f) + pow(yKern(x,y), 2.0f)));
+    // apply_auto_schedule(sobel);
+    // return sobel.realize(input.width(), input.height());
 
 }
 
