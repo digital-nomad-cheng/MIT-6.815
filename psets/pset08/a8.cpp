@@ -183,20 +183,6 @@ Image<uint8_t> Sobel(Image<uint8_t> input) {
     Halide::Buffer<uint8_t> output = sobel.realize(input.width(), input.height());
 
     return output;
-
-    // Func xKern("xKern");
-    // Func yKern("yKern");
-    // Func sobel("sobel");
-    // Func clamped("clamped");
-    // Var x("x");
-    // Var y("y");
-    // clamped(x,y) =  cast<float>(input(clamp(x, 0, input.width()-1),clamp(y, 0, input.height()-1)));
-    // xKern(x,y) = -clamped(x-1,y-1) -2.0f*clamped(x-1,y) -clamped(x-1,y+1) + clamped(x+1,y-1) + 2.0f*clamped(x+1,y) + clamped(x+1,y+1);
-    // yKern(x,y) = -clamped(x-1,y-1) -2.0f*clamped(x,y-1) -clamped(x+1,y-1) + clamped(x-1,y+1) + 2.0f*clamped(x,y+1) + clamped(x+1,y+1);
-    // sobel(x,y) = cast<uint8_t>(sqrt(pow(xKern(x,y), 2.0f) + pow(yKern(x,y), 2.0f)));
-    // apply_auto_schedule(sobel);
-    // return sobel.realize(input.width(), input.height());
-
 }
 
 // Example code for the equivalent .cpp loop questions
