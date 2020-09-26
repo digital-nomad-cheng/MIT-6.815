@@ -22,23 +22,23 @@ int main(int argc, char** argv)
         if (out3.defined()) { save_image(out3, "../Output/Luminance.png"); } else { save_image(out0, "../Output/Luminance.png"); }
         if (out4.defined()) { save_image(out4, "../Output/Sobel.png");     } else { save_image(out0, "../Output/Sobel.png");     }
 
-        // // Test image
-        // Image<uint8_t> tiny(8,8);
-        // tiny(3,3) = 255;
-        // tiny(4,3) = 255;
-        // tiny(4,4) = 255;
+        // Test image
+        Image<uint8_t> tiny(8,8);
+        tiny(3,3) = 255;
+        tiny(4,3) = 255;
+        tiny(4,4) = 255;
 
-        // // Example cpp-equivalent schedule
-        // Image<uint8_t> tiny_schedule_1 = boxSchedule1(tiny);
-        // save_image(tiny_schedule_1, "Output/boxblur_schedule1.png");
+        // Example cpp-equivalent schedule
+        Image<uint8_t> tiny_schedule_1 = boxSchedule1(tiny);
+        save_image(tiny_schedule_1, "../Output/boxblur_schedule1.png");
 
         // // Your turn !
-        // Image<uint8_t> tiny_schedule_5 = boxSchedule5(tiny);
-        // save_image(tiny_schedule_5, "Output/boxblur_schedule5.png");
-        // Image<uint8_t> tiny_schedule_6 = boxSchedule6(tiny);
-        // save_image(tiny_schedule_6, "Output/boxblur_schedule6.png");
-        // Image<uint8_t> tiny_schedule_7 = boxSchedule7(tiny);
-        // save_image(tiny_schedule_7, "Output/boxblur_schedule7.png");
+        Image<uint8_t> tiny_schedule_5 = boxSchedule5(tiny);
+        save_image(tiny_schedule_5, "../Output/boxblur_schedule5.png");
+        Image<uint8_t> tiny_schedule_6 = boxSchedule6(tiny);
+        save_image(tiny_schedule_6, "../Output/boxblur_schedule6.png");
+        Image<uint8_t> tiny_schedule_7 = boxSchedule7(tiny);
+        save_image(tiny_schedule_7, "../Output/boxblur_schedule7.png");
     }
 
     // Part 2

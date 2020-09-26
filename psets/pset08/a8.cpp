@@ -49,6 +49,7 @@ Image<uint8_t> SmoothGradNormalized(void) {
     // SCHEDULE: use compute_root() on all the Func's you create (i.e.
     // use apply_auto_schedule(Func f).
 
+    std::cout << "SmoothGradNormalized" << std::endl;
 
     Halide::Func smooth_gradient("smooth_gradient");
 
@@ -88,6 +89,7 @@ Image<uint8_t> WavyRGB(void) {
     // SCHEDULE: use compute_root() on all the Func's you create (i.e.
     // use apply_auto_schedule(Func f).
     
+    std::cout << "Inside WavyRGB" << std::endl;
     Halide::Func wavy_rgb("wavy_rgb");
 
     Halide::Var w("w");
@@ -121,6 +123,8 @@ Image<uint8_t> Luminance(Image<uint8_t> input) {
     //
     // SCHEDULE: use compute_root() on all the Func's you create (i.e.
     // use apply_auto_schedule(Func f).
+
+    std::cout << "Inside Luminance" << std::endl;
     Halide::Func luminance("luminance");
     Halide::Var x("x");
     Halide::Var y("y");
@@ -134,8 +138,9 @@ Image<uint8_t> Luminance(Image<uint8_t> input) {
 
     apply_auto_schedule(luminance);
 
-    Halide::Buffer<uint8_t> output = luminance.realize(input.width(), input.height(), input.channels());
-   
+    // Wrong: Halide::Buffer<uint8_t> output = luminance.realize(input.width(), input.height(), input.channels());
+    Halide::Buffer<uint8_t> output = luminance.realize(input.width(), input.height());
+    
     return output;
 }
 
@@ -156,6 +161,7 @@ Image<uint8_t> Sobel(Image<uint8_t> input) {
     // SCHEDULE: use compute_root() on all the Func's you create (i.e.
     // use apply_auto_schedule(Func f).
 
+    std::cout << "Inside Sobel" << std::endl;
     Halide::Func sobel("sobel");
     Halide::Var x("x");
     Halide::Var y("y");
@@ -188,6 +194,7 @@ Image<uint8_t> Sobel(Image<uint8_t> input) {
 // Example code for the equivalent .cpp loop questions
 Image<uint8_t> boxSchedule1(Image<uint8_t> input) {
     cout << "Started boxSchedule1" << endl; // DO NOT CHANGE
+
 
     // Ignore boundaries: use this width and height
     int w = input.width()-2;
@@ -249,6 +256,7 @@ Image<uint8_t> boxSchedule5(Image<uint8_t> input) {
             cout << "blur_y" << " " << x << " " << y << endl;
             for (int yy = 0; yy < 3; yy++) {
                 for (int yx = 0; yx < 1; yx++) {
+                    cout << "blur_x" << " " << yx << " " << yy << endl;
                     blur_x(yx, yy) = (static_cast<float>(input(x+yx,y+yy)) 
                         + static_cast<float>(input(x+1+yx,y+yy))
                         + static_cast<float>(input(x+2+yx,y+yy)))/3.0f;
@@ -259,6 +267,8 @@ Image<uint8_t> boxSchedule5(Image<uint8_t> input) {
     }
 
     cout << "Completed boxSchedule5" << endl;
+
+    return blur_y;
     
 }
 
@@ -301,6 +311,7 @@ Image<uint8_t> boxSchedule6(Image<uint8_t> input) {
 
     cout << "Completed boxSchedule6" << endl;
 
+    return blur_y;
 
 }
 
@@ -346,12 +357,13 @@ Image<uint8_t> boxSchedule7(Image<uint8_t> input) {
                 cout << "blur_y" << " " << x << " " << y << endl;
                 for (int yy = 0; yy < 3; yy++) {
                     for (int yx = 0; yx < w; yx++) {
+                        cout << "blur_x" << " " << yx << " " << yy << endl;
                         blur_x(yx, yy) = (static_cast<float>(input(yx, y+yy)) 
                         + static_cast<float>(input(yx, y+yy))
                         + static_cast<float>(input(yx, y+yy)))/3.0f;
                     }
                 }
-                blur_y(x, y) = static_cast<uint8_t>((blur_x(yx, 0) + blur_x(yx, 1) + blur_x(yx, 3))/3.0f);
+                blur_y(x, y) = static_cast<uint8_t>((blur_x(x, 0) + blur_x(x, 1) + blur_x(x, 3))/3.0f);
 
             }
         }
@@ -359,6 +371,7 @@ Image<uint8_t> boxSchedule7(Image<uint8_t> input) {
 
     cout << "Completed boxSchedule7" << endl;
 
+    return blur_y;
 }
 
 
