@@ -235,7 +235,30 @@ Image<uint8_t> boxSchedule5(Image<uint8_t> input) {
     // schedule 5:
     // blur_y.compute_root()
     // blur_x.compute_at(blur_y, x)
+    cout << "Started boxSchedule5" << endl;
 
+    int w = input.width()-2;
+    int h = input.height()-2;
+
+    // Intermediary stages of the pipeline, same size as input
+    Image<float> blur_x(1, 3);
+    Image<uint8_t> blur_y(input.width(), input.height());
+
+    for (int y = 0; y < h; y++) {
+        for (int x = 0; x < w; x++) {
+            cout << "blur_y" << " " << x << " " << y << endl;
+            for (int yy = 0; yy < 3; yy++) {
+                for (int yx = 0; yx < 1; yx++) {
+                    blur_x(yx, yy) = (static_cast<float>(input(x+yx,y+yy)) 
+                        + static_cast<float>(input(x+1+yx,y+yy))
+                        + static_cast<float>(input(x+2+yx,y+yy)))/3.0f;
+                }
+            }
+            blur_y(x, y) = static_cast<uint8_t>((blur_x(0, 0) + blur_x(0, 1) + blur_x(0, 3))/3.0f);
+        }
+    }
+
+    cout << "Completed boxSchedule5" << endl;
     
 }
 
@@ -253,7 +276,30 @@ Image<uint8_t> boxSchedule6(Image<uint8_t> input) {
     // schedule 6:
     // blur_y.tile(x, y, xo, yo, xi, yi, 2, 2)
     // blur_x.compute_at(blur_y, yo)
+    cout << "Started boxSchedule6" << endl;
 
+    int w = input.width()-2;
+    int h = input.height()-2;
+
+    // Intermediary stages of the pipeline, same size as input
+    Image<float> blur_x(1, 3);
+    Image<uint8_t> blur_y(input.width(), input.height());
+
+    for (int y = 0; y < h; y++) {
+        for (int x = 0; x < w; x++) {
+            cout << "blur_y" << " " << x << " " << y << endl;
+            for (int yy = 0; yy < 3; yy++) {
+                for (int yx = 0; yx < 1; yx++) {
+                    blur_x(yx, yy) = (static_cast<float>(input(x+yx,y+yy)) 
+                        + static_cast<float>(input(x+1+yx,y+yy))
+                        + static_cast<float>(input(x+2+yx,y+yy)))/3.0f;
+                }
+            }
+            blur_y(x, y) = static_cast<uint8_t>((blur_x(0, 0) + blur_x(0, 1) + blur_x(0, 3))/3.0f);
+        }
+    }
+
+    cout << "Completed boxSchedule6" << endl;
 
 
 }
@@ -271,7 +317,7 @@ Image<uint8_t> boxSchedule7(Image<uint8_t> input) {
     //
     // Do not print anything else using cout within the current function.
     
-        // // --------- HANDOUT  PS08 ------------------------------
+    // // --------- HANDOUT  PS08 ------------------------------
     // Write the cpp nested loops corresponding to the 3x3 box schedule 7 in tutorial 6
     // print the order of evaluation. 
     // Each time you perform a computation of blur_x or
@@ -284,7 +330,34 @@ Image<uint8_t> boxSchedule7(Image<uint8_t> input) {
     // schedule 7
     // blur_y.split(x, xo, xi, 2)
     // blur_x.compute_at(blur_y, y)
+    cout << "Started boxSchedule7" << endl;
 
+    int w = input.width()-2;
+    int h = input.height()-2;
+
+    // Intermediary stages of the pipeline, same size as input
+    Image<float> blur_x(input.width(), 3);
+    Image<uint8_t> blur_y(input.width(), input.height());
+
+    for (int y = 0; y < h; y++) {
+        for (int x_out = 0; x_out < w / 2; x_out++) { 
+            for (int x_in = 0; x_in < 2; x_in++) {
+                int x = x_out*2 + x_in;
+                cout << "blur_y" << " " << x << " " << y << endl;
+                for (int yy = 0; yy < 3; yy++) {
+                    for (int yx = 0; yx < w; yx++) {
+                        blur_x(yx, yy) = (static_cast<float>(input(yx, y+yy)) 
+                        + static_cast<float>(input(yx, y+yy))
+                        + static_cast<float>(input(yx, y+yy)))/3.0f;
+                    }
+                }
+                blur_y(x, y) = static_cast<uint8_t>((blur_x(yx, 0) + blur_x(yx, 1) + blur_x(yx, 3))/3.0f);
+
+            }
+        }
+    }
+
+    cout << "Completed boxSchedule7" << endl;
 
 }
 
