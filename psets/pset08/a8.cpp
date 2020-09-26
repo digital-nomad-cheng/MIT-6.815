@@ -405,6 +405,25 @@ Func LocalMax(Image<uint8_t> input, int window) {
 
     // output Func
 
+    Halide::Func local_maximum("local_maximum");
+    Halide::Func clamped("clamped");
+    Halide::Func maximum_clamped("maximum");
+
+    Halide::Var x("x");
+    Halide::Var y("y");
+
+
+    clamped = Halide::BoundaryConditions::repeat_edge(input);
+
+    
+    RDom r(-window/2, window, -window/2, window);
+
+    maximum_clamped(x, y) = Halide::maximum(clamped(x+r.x, y+r.y));
+
+    local_maximum(x, y) = cast<uint8_t>(select(clamped(x,y)==maximum_clamped(x, y), 255, 0));
+
+    return local_maximum;
+
 }
 
 
@@ -422,8 +441,49 @@ Func Gaussian(Image<uint8_t> input, float sigma, float truncate) {
     // INPUT: single channel luminance image
     //
     // OUTPUT: Func that computes Gaussian blur
-    
 
+    // Reference: https://github.com/halide/CVPR2015/blob/master/blur.cpp
+    // https://github.com/halide/Halide/commit/22fa9ff8751c2646436c3badf5e688453c0d595e#diff-48c4253500e3b184e65ad761400ea236
+
+    Halide::Func clamped("clamped");
+    Halide::Func gaussian_x("gaussian_x");
+    Halide::Func gaussian_y("gaussian_y");
+    Halide::Func kernel("kernel");
+
+    Halide::Var x("x");
+    Halide::Var y("y");
+
+    Halide::Var xo("xo");
+    Halide::Var yo("yo");
+    Halide::Var xi("xi");
+    Halide::Var yi("yi");
+    
+    clamped = Halide::BoundaryConditions::repeat_edge(input);
+
+    RDom r(-(sigma*truncate), 2*(sigma*truncate), -(sigma*truncate), 2*(sigma*truncate));
+
+    kernel(x) = exp(-x*x/(2*sigma*sigma)) / (sqrtf(2*M_PI)*sigma);
+
+
+    Halide::Expr weights_sum = sum(kernel(r.x));
+
+    gaussian_x(x, y) = sum(kernel(r.x) * clamped(x+r.x, y)) / weights_sum;
+
+    gaussian_y(x, y) = Halide::cast<uint8_t>(sum(kernel(r.y) * gaussian_x(x, y+r.y)) / weights_sum);
+
+
+   
+
+    gaussian_y.tile(x, y, xo, yo, xi, yi, 64, 32);
+    gaussian_x.compute_at(gaussian_y, xo);
+    // UNCOMMENT 373 TO USE ROOT SCHEDULE
+    // gaussian_x.compute_root();
+    // Parallel + vectorizing
+    gaussian_y.parallel(yo);
+    gaussian_x.vectorize(x, 16);
+    gaussian_y.vectorize(xi, 16);
+
+    return gaussian_y;
 }
 
 Func UnsharpMask(Image<uint8_t> input, float sigma, float truncate, float strength) {
@@ -444,5 +504,19 @@ Func UnsharpMask(Image<uint8_t> input, float sigma, float truncate, float streng
     //
     // return Func("f");
 
+    Halide::Func low_pass("low_pass");
+    Halide::Func high_pass("high_pass");
 
+    Halide::Func unsharp("unsharp");
+
+    Halide::Var x("x");
+    Halide::Var y("y");
+
+    low_pass = Gaussian(input, sigma, truncate);
+    high_pass(x, y) = input(x, y) - low_pass(x, y);
+
+    unsharp(x, y) = Halide::cast<uint8_t>(strength*high_pass(x, y) + input(x, y));
+
+    low_pass.compute_root();
+    return unsharp;
 }
