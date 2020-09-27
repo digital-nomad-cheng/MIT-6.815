@@ -10,11 +10,11 @@ int main(int argc, char** argv)
     //          README                                  
     // -------------------------------------------------
     // If you want more accurate timings, change the macro constant
-    // N_TIMES in timing.h to a value greater than 1 (e.g. 10).
+    // N_TIMES in timing.hpp to a value greater than 1 (e.g. 10).
     // This will average the performance over several runs of the profile.
     // -------------------------------------------------
 
-    Image<float> input = load_image("Input/hk.png");
+    Image<float> input = load_image("../Input/hk.png");
     int w = input.width();
     int h = input.height();
     Image<float> output;
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     // Save output
     output = harris_halide.realize(w, h);
     Image<float> norm_out = normalize_image(output);
-    save_image(norm_out, "Output/harris_halide.png");
+    save_image(norm_out, "../Output/harris_halide.png");
     
     // ----------------------------------------------------------
     /*
