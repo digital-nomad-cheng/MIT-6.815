@@ -20,7 +20,7 @@ using std::endl;
 int main(int argc, char** argv)
 {
     //load the input, convert to single channel and turn into Halide Halide::Buffer
-    Halide::Buffer<uint8_t> im = Halide::Tools::load_image("../Input/ante1-1.png");
+    Halide::Buffer<uint8_t> im = Halide::Tools::load_image("../Input/rgb.png");
 
     int width = im.width();
     int height = im.height();
@@ -49,13 +49,12 @@ int main(int argc, char** argv)
         //blur_y.compute_root();
         //blur_x.compute_root();
 
-        blur_y.split(x, xo, xi, 2);
-        blur_x.compute_at(blur_y, y);
-
+        blur_y.compute_root();
+        blur_x.compute_root();
+        
         // Debug Halide::HTML
         Halide::Buffer<uint8_t> b(type_of<uint8_t>(),im.height(),im.width());
-        blur_y.compile_to_lowered_stmt("./Output/LocaLM.html", {b}, Halide::HTML);
-
+        
         // this schedule has bad locality because the data produced by blur_x
         // are long ejected from the cache by the time blur_y needs them
         // it also doesn"t have any parallelism
@@ -118,7 +117,7 @@ int main(int argc, char** argv)
         // Earlier stages are scheduled with respect to later schedules
         // That is, we schedule a producer with respect to its consumer(s)
 
-        blur_y.tile(x, y, xo, yo, xi, yi, 256, 32); //compute in tiles of 256x32
+        blur_y.tile(x, y, xo, yo, xi, yi, 128, 128); //compute in tiles of 256x32
         // There is also a shorter version of the tile syntax that reuses the original
         // Halide::Vars x, y for the outer tile indices:
         // blur_y.tile(x, y, xi, yi, 256, 32)
@@ -213,6 +212,87 @@ int main(int argc, char** argv)
         // and a modified inner xi loop. In effect, vectorization adds an extra level of nesting
         // in strides of 8 but unrolls the innermost level into single vector instructions
     }
+
+    //////// SCHEDULE 5 :  blur_x compute_at blur_y x ////////
+    {
+        Halide::Func blur_x("blur_x"); //declare the horizontal blur function
+        Halide::Func blur_y("blur_y"); //declare the vertical blur function
+        blur_x(x,y) = cast<float>(input(x,y)+input(x+1,y)+input(x+2,y))/3.0f;
+        blur_y(x,y) = (blur_x(x,y)+blur_x(x,y+1)+blur_x(x,y+2))/3.0f;
+
+        blur_y.compute_root();
+        // blur_x.compute_root();
+
+        blur_x.compute_at(blur_y, x);
+
+        // blur_x.store_root();
+
+        // This schedule achieves the same excellent locality  and low redundancy
+        // as the above tiling and fusion. In addition, it leverages high parallelism.
+
+        cout << "\nSchedule 5: blur_x compute_at blur_y x \n";
+        float t = profile(blur_y, width-2, height-2);
+        cout << "  - speedup vs. root: "<< (refTime/t) << endl;
+    }
+
+    //////// SCHEDULE 6 :  blur_x compute_at blur_y y ////////
+    {
+        Halide::Func blur_x("blur_x"); //declare the horizontal blur function
+        Halide::Func blur_y("blur_y"); //declare the vertical blur function
+        blur_x(x,y) = cast<float>(input(x,y)+input(x+1,y)+input(x+2,y))/3.0f;
+        blur_y(x,y) = (blur_x(x,y)+blur_x(x,y+1)+blur_x(x,y+2))/3.0f;
+
+        blur_y.compute_root();
+        blur_x.compute_root();
+
+        blur_x.compute_at(blur_y, y);
+
+        // blur_x.store_root();
+
+        // This schedule achieves the same excellent locality  and low redundancy
+        // as the above tiling and fusion. In addition, it leverages high parallelism.
+
+        cout << "\nSchedule 6: blur_x compute_at blur_y y \n";
+        float t = profile(blur_y, width-2, height-2);
+        cout << "  - speedup vs. root: "<< (refTime/t) << endl;
+    }
+
+    //////// SCHEDULE 6 :  ////////
+    {
+        Halide::Func blur_x("blur_x"); //declare the horizontal blur function
+        Halide::Func blur_y("blur_y"); //declare the vertical blur function
+        blur_x(x,y) = cast<float>(input(x,y)+input(x+1,y)+input(x+2,y))/3.0f;
+        blur_y(x,y) = (blur_x(x,y)+blur_x(x,y+1)+blur_x(x,y+2))/3.0f;
+
+        blur_y.tile(x, y, xo, yo, xi, yi, 2, 2);
+        blur_x.compute_at(blur_y, yo);
+
+        // This schedule achieves the same excellent locality  and low redundancy
+        // as the above tiling and fusion. In addition, it leverages high parallelism.
+
+        cout << "\nSchedule 6: \n";
+        float t = profile(blur_y, width-2, height-2);
+        cout << "  - speedup vs. root: "<< (refTime/t) << endl;
+    }
+
+    //////// SCHEDULE 7 :  ////////
+    {
+        Halide::Func blur_x("blur_x"); //declare the horizontal blur function
+        Halide::Func blur_y("blur_y"); //declare the vertical blur function
+        blur_x(x,y) = cast<float>(input(x,y)+input(x+1,y)+input(x+2,y))/3.0f;
+        blur_y(x,y) = (blur_x(x,y)+blur_x(x,y+1)+blur_x(x,y+2))/3.0f;
+
+        blur_y.split(x, xo, xi, 2);
+        blur_x.compute_at(blur_y, y);
+
+        // This schedule achieves the same excellent locality  and low redundancy
+        // as the above tiling and fusion. In addition, it leverages high parallelism.
+
+        cout << "\nSchedule 7: \n";
+        float t = profile(blur_y, width-2, height-2);
+        cout << "  - speedup vs. root: "<< (refTime/t) << endl;
+    }
+
 
     cout << "\nSuccess!" << endl;
     return EXIT_SUCCESS;
