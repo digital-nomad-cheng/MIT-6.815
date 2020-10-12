@@ -66,68 +66,68 @@ void testComputeHomography() {
     green.write("../Output/computeHomography.png");
 }
 
-// void testComputeTransformedBBox() {
-//     Matrix H(3, 3);
-//     // This is one way to fill a Matrix:
-//     H <<
-//         0.964545,   0.0249724,  655.465,
-//         0.234809,   0.317685,   418.738,
-//         0.00068247, 1.02387e-05,    1;
+void testComputeTransformedBBox() {
+    Matrix H(3, 3);
+    // This is one way to fill a Matrix:
+    H <<
+        0.964545,   0.0249724,  655.465,
+        0.234809,   0.317685,   418.738,
+        0.00068247, 1.02387e-05,    1;
 
-//     Image poster("Input/sunset-1.png");
-//     BoundingBox bbox = computeTransformedBBox(poster.width(), poster.height(), H);
-//     cout << "Computed transformed BBox for Poster:" << endl;
-//     cout << bbox.x1 << " " <<  bbox.x2 << " " << bbox.y1 << " " << bbox.y2 << " " << endl;
+    Image poster("../Input/sunset-1.png");
+    BoundingBox bbox = computeTransformedBBox(poster.width(), poster.height(), H);
+    cout << "Computed transformed BBox for Poster:" << endl;
+    cout << bbox.x1 << " " <<  bbox.x2 << " " << bbox.y1 << " " << bbox.y2 << " " << endl;
 
 
-//     // Students TODO: drawBoundingBox would be useful to implement for debugging
-//     Image green("Input/bus_small.png");
-//     Image greenwithbox = drawBoundingBox(green, bbox);
-//     greenwithbox.write("Output/draw_bbox.png");
-// }
+    // Students TODO: drawBoundingBox would be useful to implement for debugging
+    Image green("../Input/bus_small.png");
+    Image greenwithbox = drawBoundingBox(green, bbox);
+    greenwithbox.write("../Output/draw_bbox.png");
+}
 
-// // test union
-// void testBBoxUnion() {
-//     BoundingBox bbox1( -15, 25, 3, 109);
-//     BoundingBox bbox2( -75, 19, 9, 20);
-//     BoundingBox bbox  = bboxUnion(bbox1, bbox2);
-//     assert(bbox.x1 == -75 && bbox.x2 == 25 && bbox.y1 == 3 && bbox.y2 ==  109);
-//     cout << bbox.x1 << " " <<  bbox.x2 << " " << bbox.y1 << " " << bbox.y2 << " " << endl;
-// }
+// test union
+void testBBoxUnion() {
+    BoundingBox bbox1( -15, 25, 3, 109);
+    BoundingBox bbox2( -75, 19, 9, 20);
+    BoundingBox bbox  = bboxUnion(bbox1, bbox2);
+    assert(bbox.x1 == -75 && bbox.x2 == 25 && bbox.y1 == 3 && bbox.y2 ==  109);
+    cout << bbox.x1 << " " <<  bbox.x2 << " " << bbox.y1 << " " << bbox.y2 << " " << endl;
+}
 
-// void testTranslate() {
-//     BoundingBox bbox(
-//         -15,
-//         25,
-//         3,
-//         109
-//     );
+void testTranslate() {
+    BoundingBox bbox(
+        -15,
+        25,
+        3,
+        109
+    );
 
-//     // look at translation matrix
-//     cout << "Translation Matrix:" << endl;
-//     Matrix m = makeTranslation(bbox);
-//     cout << m << endl;
+    // look at translation matrix
+    cout << "Translation Matrix:" << endl;
+    Matrix m = makeTranslation(bbox);
+    cout << m << endl;
 
-//     // transform top left of bounding box, see if it's [0,0].
-//     Matrix b(3, 1);
-//     b << bbox.x1, bbox.y1, 1;
-//     cout << "Corner of translated Bounding Box:" << endl;
-//     cout << m*b << endl;
-// }
+    // transform top left of bounding box, see if it's [0,0].
+    Matrix b(3, 1);
+    b << bbox.x1, bbox.y1, 1;
+    cout << "Corner of translated Bounding Box:" << endl;
+    cout << m*b << endl;
+}
 
-// void testStitch() {
-//     // test boston
-//     Image monu1 = Image("Input/monu-1.png");
-//     Image monu2 = Image("Input/monu-2.png");
-//     CorrespondencePair corresp[4] = {
-//         CorrespondencePair(84  , 108 , 1 , 1  , 96  , 1),
-//         CorrespondencePair(173 , 131 , 1 , 96 , 131 , 1),
-//         CorrespondencePair(94  , 218 , 1 , 14 , 224 , 1),
-//         CorrespondencePair(135 , 202 , 1 , 64 , 202 , 1)
-//     };
-//     Image monu = stitch(monu1, monu2, corresp);
-//     monu.write("./Output/stitch.png");
-// }
+void testStitch() {
+    // test boston
+    Image monu1 = Image("../Input/monu-1.png");
+    Image monu2 = Image("../Input/monu-2.png");
+    CorrespondencePair corresp[4] = {
+        CorrespondencePair(84  , 108 , 1 , 1  , 96  , 1),
+        CorrespondencePair(173 , 131 , 1 , 96 , 131 , 1),
+        CorrespondencePair(94  , 218 , 1 , 14 , 224 , 1),
+        CorrespondencePair(135 , 202 , 1 , 64 , 202 , 1)
+    };
+    Image monu = stitch(monu1, monu2, corresp);
+    monu.write("../Output/stitch.png");
+}
 
 // void testApplyHomographyFast() {
 
@@ -218,10 +218,10 @@ int main() {
     testApplyHomography();
    
     testComputeHomography();
-    // testComputeTransformedBBox();
-    // testBBoxUnion();
-    // testTranslate();
-    // testStitch();
+    testComputeTransformedBBox();
+    testBBoxUnion();
+    testTranslate();
+    testStitch();
 
 
     // // ---------------
