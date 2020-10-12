@@ -164,10 +164,20 @@ Image stitch(const Image &im1, const Image &im2, const CorrespondencePair corres
 {
 	Matrix H = computeHomography(correspondences);
 
-	BoundingBox bbox_im1 = computeTransformedBBox(im1.width(), im1.height());
-	BoundingBox bbox_im2 = computeTransformedBBox(im2.width(), im2.height());
+	BoundingBox bbox_im1 = computeTransformedBBox(im1.width(), im1.height(), H);
+	BoundingBox bbox_im2 = computeTransformedBBox(im2.width(), im2.height(), Matrix::Identity(3,3));
 
-	
+	BoundingBox bbox = bboxUnion(bbox_im1, bbox_im2);
+	Matrix T = makeTranslation(bbox);
+
+    Image out(bbox.x2 - bbox.x1, bbox.y2 - bbox.y1, im1.channels());    
+
+    applyHomography(im2, T, out, true);
+
+    applyHomography(im1, T*H, out, true);
+
+    return out;
+
 }
 
 

@@ -115,19 +115,19 @@ void testTranslate() {
     cout << m*b << endl;
 }
 
-// void testStitch() {
-//     // test boston
-//     Image monu1 = Image("Input/monu-1.png");
-//     Image monu2 = Image("Input/monu-2.png");
-//     CorrespondencePair corresp[4] = {
-//         CorrespondencePair(84  , 108 , 1 , 1  , 96  , 1),
-//         CorrespondencePair(173 , 131 , 1 , 96 , 131 , 1),
-//         CorrespondencePair(94  , 218 , 1 , 14 , 224 , 1),
-//         CorrespondencePair(135 , 202 , 1 , 64 , 202 , 1)
-//     };
-//     Image monu = stitch(monu1, monu2, corresp);
-//     monu.write("./Output/stitch.png");
-// }
+void testStitch() {
+    // test boston
+    Image monu1 = Image("../Input/monu-1.png");
+    Image monu2 = Image("../Input/monu-2.png");
+    CorrespondencePair corresp[4] = {
+        CorrespondencePair(84  , 108 , 1 , 1  , 96  , 1),
+        CorrespondencePair(173 , 131 , 1 , 96 , 131 , 1),
+        CorrespondencePair(94  , 218 , 1 , 14 , 224 , 1),
+        CorrespondencePair(135 , 202 , 1 , 64 , 202 , 1)
+    };
+    Image monu = stitch(monu1, monu2, corresp);
+    monu.write("../Output/stitch.png");
+}
 
 // void testApplyHomographyFast() {
 
@@ -221,7 +221,7 @@ int main() {
     testComputeTransformedBBox();
     testBBoxUnion();
     testTranslate();
-    // testStitch();
+    testStitch();
 
 
     // // ---------------
