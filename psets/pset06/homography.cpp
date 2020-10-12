@@ -135,6 +135,42 @@ BoundingBox computeTransformedBBox(int imwidth, int imheight, Matrix H)
 	return BoundingBox(x1, x2, y1, y2);
 }
 
+BoundingBox bboxUnion(BoundingBox B1, BoundingBox B2)
+{
+	int x1, x2, y1, y2;
+
+	x1 = min(B1.x1, B2.x1);
+	y1 = min(B1.y1, B2.y1);
+
+	x2 = max(B1.x2, B2.x2);
+	y2 = max(B1.y2, B2.y2);
+
+	return BoundingBox(x1, x2, y1, y2);
+
+}
+
+Matrix makeTranslation(BoundingBox B)
+{
+	Matrix H(3, 3);
+
+
+	H << 1, 0, -B.x1, 0, 1, -B.y1, 0, 0, 1;
+
+	return H;
+}
+
+// stitching
+Image stitch(const Image &im1, const Image &im2, const CorrespondencePair correspondences[4])
+{
+	Matrix H = computeHomography(correspondences);
+
+	BoundingBox bbox_im1 = computeTransformedBBox(im1.width(), im1.height());
+	BoundingBox bbox_im2 = computeTransformedBBox(im2.width(), im2.height());
+
+	
+}
+
+
 // debug-useful
 Image drawBoundingBox(const Image &im, BoundingBox bbox) {
     // // --------- HANDOUT  PS06 ------------------------------

@@ -86,34 +86,34 @@ void testComputeTransformedBBox() {
     greenwithbox.write("../Output/draw_bbox.png");
 }
 
-// // test union
-// void testBBoxUnion() {
-//     BoundingBox bbox1( -15, 25, 3, 109);
-//     BoundingBox bbox2( -75, 19, 9, 20);
-//     BoundingBox bbox  = bboxUnion(bbox1, bbox2);
-//     assert(bbox.x1 == -75 && bbox.x2 == 25 && bbox.y1 == 3 && bbox.y2 ==  109);
-//     cout << bbox.x1 << " " <<  bbox.x2 << " " << bbox.y1 << " " << bbox.y2 << " " << endl;
-// }
+// test union
+void testBBoxUnion() {
+    BoundingBox bbox1( -15, 25, 3, 109);
+    BoundingBox bbox2( -75, 19, 9, 20);
+    BoundingBox bbox  = bboxUnion(bbox1, bbox2);
+    assert(bbox.x1 == -75 && bbox.x2 == 25 && bbox.y1 == 3 && bbox.y2 ==  109);
+    cout << bbox.x1 << " " <<  bbox.x2 << " " << bbox.y1 << " " << bbox.y2 << " " << endl;
+}
 
-// void testTranslate() {
-//     BoundingBox bbox(
-//         -15,
-//         25,
-//         3,
-//         109
-//     );
+void testTranslate() {
+    BoundingBox bbox(
+        -15,
+        25,
+        3,
+        109
+    );
 
-//     // look at translation matrix
-//     cout << "Translation Matrix:" << endl;
-//     Matrix m = makeTranslation(bbox);
-//     cout << m << endl;
+    // look at translation matrix
+    cout << "Translation Matrix:" << endl;
+    Matrix m = makeTranslation(bbox);
+    cout << m << endl;
 
-//     // transform top left of bounding box, see if it's [0,0].
-//     Matrix b(3, 1);
-//     b << bbox.x1, bbox.y1, 1;
-//     cout << "Corner of translated Bounding Box:" << endl;
-//     cout << m*b << endl;
-// }
+    // transform top left of bounding box, see if it's [0,0].
+    Matrix b(3, 1);
+    b << bbox.x1, bbox.y1, 1;
+    cout << "Corner of translated Bounding Box:" << endl;
+    cout << m*b << endl;
+}
 
 // void testStitch() {
 //     // test boston
@@ -219,8 +219,8 @@ int main() {
    
     testComputeHomography();
     testComputeTransformedBBox();
-    // testBBoxUnion();
-    // testTranslate();
+    testBBoxUnion();
+    testTranslate();
     // testStitch();
 
 
