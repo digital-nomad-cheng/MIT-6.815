@@ -66,25 +66,25 @@ void testComputeHomography() {
     green.write("../Output/computeHomography.png");
 }
 
-// void testComputeTransformedBBox() {
-//     Matrix H(3, 3);
-//     // This is one way to fill a Matrix:
-//     H <<
-//         0.964545,   0.0249724,  655.465,
-//         0.234809,   0.317685,   418.738,
-//         0.00068247, 1.02387e-05,    1;
+void testComputeTransformedBBox() {
+    Matrix H(3, 3);
+    // This is one way to fill a Matrix:
+    H <<
+        0.964545,   0.0249724,  655.465,
+        0.234809,   0.317685,   418.738,
+        0.00068247, 1.02387e-05,    1;
 
-//     Image poster("Input/sunset-1.png");
-//     BoundingBox bbox = computeTransformedBBox(poster.width(), poster.height(), H);
-//     cout << "Computed transformed BBox for Poster:" << endl;
-//     cout << bbox.x1 << " " <<  bbox.x2 << " " << bbox.y1 << " " << bbox.y2 << " " << endl;
+    Image poster("../Input/sunset-1.png");
+    BoundingBox bbox = computeTransformedBBox(poster.width(), poster.height(), H);
+    cout << "Computed transformed BBox for Poster:" << endl;
+    cout << bbox.x1 << " " <<  bbox.x2 << " " << bbox.y1 << " " << bbox.y2 << " " << endl;
 
 
-//     // Students TODO: drawBoundingBox would be useful to implement for debugging
-//     Image green("Input/bus_small.png");
-//     Image greenwithbox = drawBoundingBox(green, bbox);
-//     greenwithbox.write("Output/draw_bbox.png");
-// }
+    // Students TODO: drawBoundingBox would be useful to implement for debugging
+    Image green("../Input/bus_small.png");
+    Image greenwithbox = drawBoundingBox(green, bbox);
+    greenwithbox.write("../Output/draw_bbox.png");
+}
 
 // // test union
 // void testBBoxUnion() {
@@ -218,7 +218,7 @@ int main() {
     testApplyHomography();
    
     testComputeHomography();
-    // testComputeTransformedBBox();
+    testComputeTransformedBBox();
     // testBBoxUnion();
     // testTranslate();
     // testStitch();

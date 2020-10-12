@@ -64,3 +64,120 @@ Matrix computeHomography(const CorrespondencePair pairs[4])
 	
 	return H;
 }
+
+// bbox related functions
+BoundingBox computeTransformedBBox(int imwidth, int imheight, Matrix H)
+{
+	Matrix src0(3, 1);
+	Matrix dst0(3, 1);
+	Matrix src1(3, 1);
+	Matrix dst1(3, 1);
+	Matrix src2(3, 1);
+	Matrix dst2(3, 1);
+	Matrix src3(3, 1);
+	Matrix dst3(3, 1);
+
+
+	int x1 = INT_MAX;
+	int x2 = INT_MIN;
+	int y1 = INT_MAX;
+	int y2 = INT_MIN;
+
+	src0 << 0, 0, 1;
+	dst0 = H * src0;
+
+	src1 << 0, imheight, 1;
+	dst1 = H * src1;
+
+	src2 << imwidth, 0, 1;
+	dst2 = H * src2;
+
+	src3 << imwidth, imheight, 1;
+	dst3 = H * src3;
+
+
+	dst0(0, 0) /= dst0(2, 0);
+	dst0(1, 0) /= dst0(2, 0);
+
+	dst1(0, 0) /= dst1(2, 0);
+	dst1(1, 0) /= dst1(2, 0);
+
+	dst2(0, 0) /= dst2(2, 0);
+	dst2(1, 0) /= dst2(2, 0);
+
+	dst3(0, 0) /= dst3(2, 0);
+	dst3(1, 0) /= dst3(2, 0);
+
+
+	if (x1 > dst0(0, 0)) x1 = dst0(0, 0);
+	if (x1 > dst1(0, 0)) x1 = dst1(0, 0);
+	if (x1 > dst2(0, 0)) x1 = dst2(0, 0);
+	if (x1 > dst3(0, 0)) x1 = dst3(0, 0);
+
+
+	if (y1 > dst0(1, 0)) y1 = dst0(1, 0);
+	if (y1 > dst1(1, 0)) y1 = dst1(1, 0);
+	if (y1 > dst2(1, 0)) y1 = dst2(1, 0);
+	if (y1 > dst3(1, 0)) y1 = dst3(1, 0);
+
+
+	if (x2 < dst0(0, 0)) x2 = dst0(0, 0);
+	if (x2 < dst1(0, 0)) x2 = dst1(0, 0);
+	if (x2 < dst2(0, 0)) x2 = dst2(0, 0);
+	if (x2 < dst3(0, 0)) x2 = dst3(0, 0);
+
+
+	if (y2 < dst0(1, 0)) y2 = dst0(1, 0);
+	if (y2 < dst1(1, 0)) y2 = dst1(1, 0);
+	if (y2 < dst2(1, 0)) y2 = dst2(1, 0);
+	if (y2 < dst3(1, 0)) y2 = dst3(1, 0);
+
+	return BoundingBox(x1, x2, y1, y2);
+}
+
+// debug-useful
+Image drawBoundingBox(const Image &im, BoundingBox bbox) {
+    // // --------- HANDOUT  PS06 ------------------------------
+    //  ________________________________________
+    // / Draw me a bounding box!                \
+    // |                                        |
+    // | "I jumped to my                        |
+    // | feet, completely thunderstruck. I      |
+    // | blinked my eyes hard. I looked         |
+    // | carefully all around me. And I saw a   |
+    // | most extraordinary small person, who   |
+    // | stood there examining me with great    |
+    // | seriousness."                          |
+    // \              Antoine de Saint-Exupery  /
+    //  ----------------------------------------
+    //         \   ^__^
+    //          \  (oo)\_______
+    //             (__)\       )\/\
+    //                 ||----w |
+    //                 ||     ||
+
+    Image output = im;
+    std::cout << "x1 is: " << bbox.x1 << " x2: " << bbox.x2 << " y1: " << bbox.y1 << " y2: " << bbox.y2 << endl;
+    for (int i = bbox.x1; i < bbox.x2; i++){
+        output(i,bbox.y1,0) = 0;
+        output(i,bbox.y1,1) = 1;
+        output(i,bbox.y1,2) = 0;  
+
+        output(i,bbox.y2,0) = 0;
+        output(i,bbox.y2,1) = 1;
+        output(i,bbox.y2,2) = 0;  
+    }
+
+
+    for (int j = bbox.y1; j < bbox.y2; j++){
+        output(bbox.x1,j,0) = 0;
+        output(bbox.x1,j,1) = 1;
+        output(bbox.x1,j,2) = 0;  
+
+        output(bbox.x2,j,0) = 0;
+        output(bbox.x2,j,1) = 1;
+        output(bbox.x2,j,2) = 0;   
+    }
+
+    return output;
+}
