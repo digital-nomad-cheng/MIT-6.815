@@ -18,11 +18,25 @@ Image computeTensor(const Image &im, float sigmaG, float factorSigma)
 			output(w, h, 2) =  gradient_y(w, h)*gradient_y(w, h);
 		}
 	}
-	
+
 	return gaussianBlur_separable(output, sigmaG*factorSigma);
 }
 
 
+Image cornerResponse(const Image &im, float k, float sigmaG, float factorSigma)
+{
+	Image struct_tensor = computeTensor(im, sigmaG, factorSigma);
+	Image output(im.width(), im.height(), 1);
+
+	for (int h = 0; h < output.height(); h++) {
+		for (int w = 0; w < output.width(); w++) {
+			Matrix M(2, 2);
+			M << struct_tensor(w, h, 0), struct_tensor(w, h, 1), struct_tensor(w, h, 1), struct_tensor(w, h, 2);
+			output(w, h) = M.determinant() - k*M.trace()*M.trace();
+		}
+	}
+	return output;
+}
 
 /***********************************************************************
  * Point and Feature Definitions *
