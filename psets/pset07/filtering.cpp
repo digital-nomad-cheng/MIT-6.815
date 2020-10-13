@@ -295,3 +295,50 @@ Image impulseImg(int k){
     
     return impulse;
 }
+
+
+
+// --------- HANDOUT  PS07 ------------------------------
+Image gradientX(const Image &im, bool clamp){
+    Filter sobelX(3, 3);
+    sobelX(0,0) = -1.0; sobelX(1,0) = 0.0; sobelX(2,0) = 1.0;
+    sobelX(0,1) = -2.0; sobelX(1,1) = 0.0; sobelX(2,1) = 2.0;
+    sobelX(0,2) = -1.0; sobelX(1,2) = 0.0; sobelX(2,2) = 1.0;
+
+    Image imSobelX = sobelX.convolve(im, clamp);
+    return imSobelX;
+}
+
+
+Image gradientY(const Image &im, bool clamp) {
+
+    // sobel filtering in y direction
+    Filter sobelY(3, 3);
+    sobelY(0,0) = -1.0; sobelY(1,0) = -2.0; sobelY(2,0) = -1.0;
+    sobelY(0,1) = 0.0; sobelY(1,1) = 0.0; sobelY(2,1) = 0.0;
+    sobelY(0,2) = 1.0; sobelY(1,2) = 2.0; sobelY(2,2) = 1.0;
+
+
+    Image imSobelY = sobelY.convolve(im, clamp);
+    return imSobelY;
+}
+
+Image maximum_filter(const Image &im, float maxiDiam) {
+    float mi = floor((maxiDiam) / 2);
+    float ma = maxiDiam - mi - 1;
+
+    Image mf(im.width(), im.height(), im.channels());
+    for (int c = 0; c < im.channels(); c++) 
+    for (int i = mi; i < im.width() - ma; i++) 
+    for (int j = mi; j < im.height() - ma; j++) 
+    {
+
+        for (int deli = -mi; deli <= ma; deli++) 
+        for (int delj = -mi; delj <= ma; delj++) 
+        {
+            mf(i, j, c) = max(mf(i, j, c), im(i+deli, j+delj, c));
+        }
+
+    }
+    return mf;
+}

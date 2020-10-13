@@ -69,5 +69,13 @@ Image bilaYUV(const Image &im, float sigmaRange=0.1, float sigmaY=1.0, float sig
 
 // Return impulse image of size kxkx1
 Image impulseImg(int k);
+
+
+ 
+// --------- HANDOUT PS07 ------------------------------
+Image maximum_filter(const Image &im, float maxiDiam);
+Image gradientX(const Image &im, bool clamp=true);
+Image gradientY(const Image &im, bool clamp=true);
+// ------------------------------------------------------
  
 #endif
