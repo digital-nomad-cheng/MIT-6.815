@@ -251,7 +251,9 @@ Image<float> HarrisCornersRef(const Image<float> &input,
 
     // Blur tensor
     Image<float> blurred_tensor = gaussian_blur(tensor, sigmaG*factorSigma, truncate);
-
+    Image<float> norm_blurred_tensor = normalize_image(blurred_tensor);
+    convert_and_save_image(norm_blurred_tensor, "../Output/ref_blurred_tensor.png");
+    
     // Determinant and trace
     // Corner response
     // response = det(M) - k*trace(M)^2
