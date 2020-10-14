@@ -275,7 +275,7 @@ Image<float> HarrisCornersRef(const Image<float> &input,
     // Maximum filter
     Image<float> maxifilt = maximum_filter(response, maxiDiam);
     Image<float> norm_maxi = normalize_image(maxifilt);
-    convert_and_save_image(norm_maxi, "../Output/maximum_filter.png");
+    convert_and_save_image(norm_maxi, "../Output/ref_maximum_response.png");
 
     // Non-max. suppression
     for (int y = 0; y < h; ++y) 
@@ -286,6 +286,10 @@ Image<float> HarrisCornersRef(const Image<float> &input,
             output(x,y) = 1.0f;
         } // 0.0f otherwise
     }
+
+
+    Image<float> norm_output = normalize_image(output);
+    convert_and_save_image(norm_output, "../Output/ref_output.png");
 
     return output;
 }
