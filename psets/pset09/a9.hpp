@@ -18,6 +18,8 @@ using Halide::Tools::Image;
 using Halide::Func;
 using Halide::Tools::save_image;
 using Halide::Tools::load_image;
+using Halide::Tools::load_and_convert_image;
+using Halide::Tools::convert_and_save_image;
 
 void apply_auto_schedule(Func F);
 void apply_my_schedule(Func F);

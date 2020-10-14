@@ -218,11 +218,11 @@ Image<float> HarrisCornersRef(const Image<float> &input,
 
     // luminance
     Image<float> luminance = computeLuminance(input);
-    save_image(luminance, "Output/ref_luminance.png");
+    convert_and_save_image(luminance, "../Output/ref_luminance.png");
 
     // blur
     Image<float> blurred_luminance = gaussian_blur(luminance, sigmaG, truncate);
-    save_image(blurred_luminance, "Output/ref_blur_luminance.png");
+    convert_and_save_image(blurred_luminance, "../Output/ref_blur_luminance.png");
 
     // Compute gradients dx and dy
     Image<float> gradientX = sobelFilter_x(blurred_luminance);
@@ -231,8 +231,8 @@ Image<float> HarrisCornersRef(const Image<float> &input,
     // Debug viz
     Image<float> normX = normalize_image(gradientX);
     Image<float> normY = normalize_image(gradientY);
-    save_image(normX, "Output/ref_gradientX.png");
-    save_image(normY, "Output/ref_gradientY.png");
+    convert_and_save_image(normX, "../Output/ref_gradientX.png");
+    convert_and_save_image(normY, "../Output/ref_gradientY.png");
 
     // Assemble tensor
     // M = | dx*dx dx*dy |
@@ -247,7 +247,7 @@ Image<float> HarrisCornersRef(const Image<float> &input,
     }
 
     Image<float> normalized_tensor = normalize_image(tensor);
-    save_image(normalized_tensor, "Output/ref_tensor.png");
+    convert_and_save_image(normalized_tensor, "../Output/ref_tensor.png");
 
     // Blur tensor
     Image<float> blurred_tensor = gaussian_blur(tensor, sigmaG*factorSigma, truncate);
@@ -267,13 +267,13 @@ Image<float> HarrisCornersRef(const Image<float> &input,
 
     // Debug viz
     Image<float> norm_resp = normalize_image(response);
-    save_image(norm_resp, "Output/ref_response.png");
+    convert_and_save_image(norm_resp, "../Output/ref_response.png");
 
 
     // Maximum filter
     Image<float> maxifilt = maximum_filter(response, maxiDiam);
     Image<float> norm_maxi = normalize_image(maxifilt);
-    save_image(norm_maxi, "Output/maximum_filter.png");
+    convert_and_save_image(norm_maxi, "../Output/maximum_filter.png");
 
     // Non-max. suppression
     for (int y = 0; y < h; ++y) 
