@@ -87,7 +87,7 @@ Func HarrisCorners(const Image<float> &input,
     kernel_normed.compute_root();
 
     kernel(x) = exp(-(x - offset)*(x - offset) / (2.0f*sigmaG*sigmaG));
-    kernel_sum(x) = sum(kernel(r.x));
+    kernel_sum(x) = sum(kernel(r));
     kernel_normed(x) = kernel(x) / kernel_sum(0);
 
     // blur_x
@@ -157,7 +157,7 @@ Func HarrisCorners(const Image<float> &input,
     RDom tensor_r(-tensor_offset, 2*tensor_offset+1);
 
     tensor_kernel(x) = exp(-(x - tensor_offset)*(x - tensor_offset) / (2.0f*tensor_sigma*tensor_sigma));
-    tensor_kernel_sum(x) = sum(tensor_kernel(tensor_r.x));
+    tensor_kernel_sum(x) = sum(tensor_kernel(tensor_r));
     tensor_kernel_normed(x) = tensor_kernel(x) / tensor_kernel_sum(0);
     
     tensor_kernel.compute_root();
