@@ -1,4 +1,4 @@
-# 6.815
+# MIT-6.815
 Solution for MIT course 6.815/6.865  Digital & Computational Photography.
 
 Course website: http://stellar.mit.edu/S/course/6/sp15/6.815/
